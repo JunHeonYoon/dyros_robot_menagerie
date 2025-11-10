@@ -1,0 +1,27 @@
+<package format="3">
+  <name>dyros_robot_menagerie</name>
+  <version>0.1.0</version>
+  <description>Robot menagerie using mujoco_ros_sim and dyros_robot_controller.</description>
+  <maintainer email="yoonjh98@snu.ac.kr">Yoon Junheon</maintainer>
+  <license>Apache License 2.0</license>
+
+  <!-- Buildtool -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+  <!-- Dependencies -->
+  <depend>rclcpp</depend>
+  <depend>pluginlib</depend>
+  <depend>rclpy</depend>
+  <depend>Eigen3</depend>
+  <depend>OpenCV</depend>
+  <depend>mujoco_ros_sim</depend>
+  <depend>dyros_robot_controller</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

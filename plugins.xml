@@ -1,0 +1,31 @@
+<!-- Mobile -->
+<library path="husky_controller_plugins">
+    <class name="dyros_robot_menagerie/HuskyController"
+           type="Husky::HuskyController"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>
+
+<library path="xls_controller_plugins">
+    <class name="dyros_robot_menagerie/XLSController"
+           type="XLS::XLSController"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>
+
+<library path="pcv_controller_plugins">
+    <class name="dyros_robot_menagerie/PCVController"
+           type="PCV::PCVController"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>
+
+<!-- Manipulator -->
+<library path="fr3_controller_plugins">
+    <class name="dyros_robot_menagerie/FR3Controller"
+           type="FR3::FR3Controller"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>
+
+<library path="ur5e_controller_plugins">
+    <class name="dyros_robot_menagerie/UR5eController"
+           type="UR5e::UR5eController"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>

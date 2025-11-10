@@ -1,0 +1,335 @@
+<?xml version="1.0" ?>
+<robot name="pcv">
+  <link name="world"/>
+
+  <!-- Virtual -->
+  <joint name="world_to_vx" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child  link="v_x_link"/>
+  </joint>
+  <link name="v_x_link" />
+  <joint name="v_x_joint" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="v_x_link"/>
+      <child link="v_y_link"/>
+      <axis xyz= "1 0 0"/>
+      <limit effort="1000.0" lower="-10000.0" upper="10000.0" velocity="10000.0"/>
+  </joint>
+  <link name="v_y_link" />
+  <joint name="v_y_joint" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="v_y_link"/>
+      <child link="v_t_link"/>
+      <axis xyz= "0 1 0"/>
+      <limit effort="1000.0" lower="-10000.0" upper="10000.0" velocity="10000.0"/>
+  </joint>
+  <link name="v_t_link" />
+  <joint name="v_t_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="v_t_link"/>
+      <child link="base_footprint"/>
+      <axis rpy="0 0 0" xyz="0 0 1"/>
+      <limit effort="1000.0" lower="-6.24" upper="6.24" velocity="10000.0"/>
+  </joint>
+
+  <!-- Mobile Base -->
+   <link name="base_footprint"/>
+  <joint name="base_footprint_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.13228"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/body_bottom.stl"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1"/>
+      </material>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/body_side.stl"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1"/>
+      </material>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/body_top.stl"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.12" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.67 0.47 0.26" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.95"/>
+      <inertia ixx="0.2491" ixy="0.0" ixz="0.0" iyy="0.4255" iyz="0.0" izz="0.5545"/>
+      <!-- <mass value="107.95"/> -->
+      <!-- <inertia ixx="5.88" ixy="0.0" ixz="0.0" iyy="5.88" iyz="0.0" izz="5.88"/> -->
+    </inertial>
+  </link>
+
+ <link name="front_left_steer">
+  <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/wheel_body.stl"/>
+      </geometry>
+      <material name="silver">
+        <color rgba="0.8 0.8 0.8 1"/>
+    </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.002" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- Pinocchio takes 'continuous' type as nv=2 -->
+  <joint name="front_left_steer" type="revolute">
+    <parent link="base_link"/>
+    <child link="front_left_steer"/>
+    <origin xyz="0.215 0.125 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100.0" lower="-3.141592" upper="3.141592" velocity="1000"/>
+  </joint>
+
+  <link name="front_left_rotate">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="-1.570796 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/wheel_rotate.stl"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.015" radius="0.055"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.72"/>
+      <inertia ixx="0.0005685" ixy="0.0" ixz="0.0" iyy="0.001089" iyz="0.0" izz="0.0005685"/>
+    </inertial>
+  </link>
+
+  <!-- Pinocchio takes 'continuous' type as nv=2 -->
+  <joint name="front_left_rotate" type="revolute">
+    <parent link="front_left_steer"/>
+    <child link="front_left_rotate"/>
+    <origin xyz="-0.02 0 -0.052" rpy="1.570796 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100.0" lower="-3.141592" upper="3.141592" velocity="1000"/>
+  </joint>
+
+  <link name="rear_left_steer">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/wheel_body.stl"/>
+      </geometry>
+      <material name="silver">
+        <color rgba="0.8 0.8 0.8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.002" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- Pinocchio takes 'continuous' type as nv=2 -->
+  <joint name="rear_left_steer" type="revolute">
+    <parent link="base_link"/>
+    <child link="rear_left_steer"/>
+    <origin xyz="-0.215 0.125  0.0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100.0" lower="-3.141592" upper="3.141592" velocity="1000"/>
+  </joint>
+
+  <link name="rear_left_rotate">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="-1.570796 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/wheel_rotate.stl"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.015" radius="0.055"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.72"/>
+      <inertia ixx="0.0005685" ixy="0.0" ixz="0.0" iyy="0.001089" iyz="0.0" izz="0.0005685"/>
+    </inertial>
+  </link>
+
+  <!-- Pinocchio takes 'continuous' type as nv=2 -->
+  <joint name="rear_left_rotate" type="revolute">
+    <parent link="rear_left_steer"/>
+    <child link="rear_left_rotate"/>
+    <origin xyz="-0.02 0 -0.052" rpy="1.570796 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100.0" lower="-3.141592" upper="3.141592" velocity="1000"/>
+  </joint>
+
+
+  <link name="rear_right_steer">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/wheel_body.stl"/>
+      </geometry>
+      <material name="silver">
+        <color rgba="0.8 0.8 0.8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.002" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- Pinocchio takes 'continuous' type as nv=2 -->
+  <joint name="rear_right_steer" type="revolute">
+    <parent link="base_link"/>
+    <child link="rear_right_steer"/>
+    <origin xyz="-0.215 -0.125  0.0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100.0" lower="-3.141592" upper="3.141592" velocity="1000"/>
+  </joint>
+
+  <link name="rear_right_rotate">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="-1.570796 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/wheel_rotate.stl"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.015" radius="0.055"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.72"/>
+      <inertia ixx="0.0005685" ixy="0.0" ixz="0.0" iyy="0.001089" iyz="0.0" izz="0.0005685"/>
+    </inertial>
+  </link>
+
+  <!-- Pinocchio takes 'continuous' type as nv=2 -->
+  <joint name="rear_right_rotate" type="revolute">
+    <parent link="rear_right_steer"/>
+    <child link="rear_right_rotate"/>
+    <origin xyz="-0.02 0 -0.052" rpy="1.570796 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100.0" lower="-3.141592" upper="3.141592" velocity="1000"/>
+  </joint>
+
+
+  <link name="front_right_steer">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/wheel_body.stl"/>
+      </geometry>
+      <material name="silver">
+        <color rgba="0.8 0.8 0.8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.002" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- Pinocchio takes 'continuous' type as nv=2 -->
+  <joint name="front_right_steer" type="revolute">
+    <parent link="base_link"/>
+    <child link="front_right_steer"/>
+    <origin xyz="0.215 -0.125  0.0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100.0" lower="-3.141592" upper="3.141592" velocity="1000"/>
+  </joint>
+
+  <link name="front_right_rotate">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="-1.570796 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dyros_pcv/assets/wheel_rotate.stl"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.015" radius="0.055"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.72"/>
+      <inertia ixx="0.0005685" ixy="0.0" ixz="0.0" iyy="0.001089" iyz="0.0" izz="0.0005685"/>
+    </inertial>
+  </link>
+
+  <!-- Pinocchio takes 'continuous' type as nv=2 -->
+  <joint name="front_right_rotate" type="revolute">
+    <parent link="front_right_steer"/>
+    <child link="front_right_rotate"/>
+    <origin xyz="-0.02 0 -0.052" rpy="1.570796 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100.0" lower="-3.141592" upper="3.141592" velocity="1000"/>
+  </joint>
+</robot>

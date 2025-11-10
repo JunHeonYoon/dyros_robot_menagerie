@@ -1,0 +1,289 @@
+<?xml version="1.0" ?>
+<robot name="xls">
+  <link name="world"/>
+
+  <!-- Virtual -->
+  <joint name="world_to_vx" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child  link="v_x_link"/>
+  </joint>
+  <link name="v_x_link" />
+  <joint name="v_x_joint" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="v_x_link"/>
+      <child link="v_y_link"/>
+      <axis xyz= "1 0 0"/>
+      <limit effort="1000.0" lower="-10000.0" upper="10000.0" velocity="10000.0"/>
+  </joint>
+  <link name="v_y_link" />
+  <joint name="v_y_joint" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="v_y_link"/>
+      <child link="v_t_link"/>
+      <axis xyz= "0 1 0"/>
+      <limit effort="1000.0" lower="-10000.0" upper="10000.0" velocity="10000.0"/>
+  </joint>
+  <link name="v_t_link" />
+  <joint name="v_t_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="v_t_link"/>
+      <child link="base_footprint"/>
+      <axis rpy="0 0 0" xyz="0 0 1"/>
+      <limit effort="1000.0" lower="-6.24" upper="6.24" velocity="10000.0"/>
+  </joint>
+
+  <!-- Mobile Base -->
+  <link name="base_footprint"/>
+  <joint name="base_footprint_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.127"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+
+  <link name="base_link">
+    <inertial>
+      <mass value="125.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1.391" ixy="0.004" ixz="0.0" iyy="6.853" iyz="0.0" izz="6.125"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/bases/xls/summit_xls_chassis.stl"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/bases/xls/summit_xls_chassis.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="base_chapa">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/bases/xls/summit_xls_chapas_inox_tapas.stl"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="base_tapa_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0 0.38062"/>
+    <parent link="base_link"/>
+    <child link="base_chapa"/>
+  </joint>
+
+  <link name="base_logo_left">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/bases/xls/robotnik_logo_chasis.stl"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="base_logo_left_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0.28931 0.29062"/>
+    <parent link="base_link"/>
+    <child link="base_logo_left"/>
+  </joint>
+
+  <link name="base_logo_right">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/bases/xls/robotnik_logo_chasis.stl"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="base_logo_right_joint" type="fixed">
+    <origin rpy="0 0 3.141592653589793" xyz="0.0 -0.28931 0.29062"/>
+    <parent link="base_link"/>
+    <child link="base_logo_right"/>
+  </joint>
+
+  <link name="base_logo_front">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/bases/xls/robotnik_logo_chasis.stl"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="base_logo_front_joint" type="fixed">
+    <origin rpy="0 0 -1.5707963267948966" xyz="0.345 0.0 0.0"/>
+    <parent link="base_link"/>
+    <child link="base_logo_front"/>
+  </joint>
+
+  <link name="base_logo_rear">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/bases/xls/robotnik_logo_chasis.stl"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="base_logo_rear_joint" type="fixed">
+    <origin rpy="0 0 1.5707963267948966" xyz="-0.345 0.0 0.0"/>
+    <parent link="base_link"/>
+    <child link="base_logo_rear"/>
+  </joint>
+
+  <link name="base_docking_contact">
+    </link>
+  <joint name="base_docking_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.35 0 0.09"/>
+    <parent link="base_link"/>
+    <child link="base_docking_contact"/>
+  </joint>
+
+  <!-- Pinocchio takes 'continuous' type as nv=2 -->
+  <joint name="front_right_wheel" type="revolute">
+    <parent link="base_link"/>
+    <child link="front_right_wheel_link"/>
+    <origin rpy="0 0 0" xyz="0.2225 -0.2045 0.0"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+    <limit effort="100" velocity="100"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  <link name="front_right_wheel_link">
+  <visual>
+    <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/wheels/omni_wheel_2.dae"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.2 0.2 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.087" radius="0.127"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="6.5"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0303095" ixy="0" ixz="0" iyy="0.05241925" iyz="0" izz="0.0303095"/>
+    </inertial>
+  </link>
+
+  <joint name="front_left_wheel" type="revolute">
+    <parent link="base_link"/>
+    <child link="front_left_wheel_link"/>
+    <origin rpy="0 0 0" xyz="0.2225 0.2045 0.0"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+    <limit effort="100" velocity="100"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  <link name="front_left_wheel_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/wheels/omni_wheel_1.dae"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.2 0.2 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.087" radius="0.127"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="6.5"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0303095" ixy="0" ixz="0" iyy="0.05241925" iyz="0" izz="0.0303095"/>
+    </inertial>
+  </link>
+
+  <joint name="rear_left_wheel" type="revolute">
+    <parent link="base_link"/>
+    <child link="rear_left_wheel_link"/>
+    <origin rpy="0 0 0" xyz="-0.2225 0.2045 0.0"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+    <limit effort="100" velocity="100"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  <link name="rear_left_wheel_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/wheels/omni_wheel_1.dae"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.2 0.2 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.087" radius="0.127"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="6.5"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0303095" ixy="0" ixz="0" iyy="0.05241925" iyz="0" izz="0.0303095"/>
+    </inertial>
+  </link>
+
+  <joint name="rear_right_wheel" type="revolute">
+    <parent link="base_link"/>
+    <child link="rear_right_wheel_link"/>
+    <origin rpy="0 0 0" xyz="-0.2225 -0.2045 0.0"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+    <limit effort="100" velocity="100"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+  
+  <link name="rear_right_wheel_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/summit_xls/assets/wheels/omni_wheel_2.dae"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.2 0.2 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.087" radius="0.127"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="6.5"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0303095" ixy="0" ixz="0" iyy="0.05241925" iyz="0" izz="0.0303095"/>
+    </inertial>
+  </link>
+</robot>
