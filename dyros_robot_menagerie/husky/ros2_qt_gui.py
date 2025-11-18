@@ -27,7 +27,7 @@ class HuskyQtGui(Node, QWidget):
         self.vel_pub  = self.create_publisher(Twist, 'husky_controller/cmd_vel', 10)
 
         # Subscribers
-        self.joint_sub    = self.create_subscription(JointState, 'husky_controller/joint_states', self.joint_state_callback, 10)
+        self.joint_sub    = self.create_subscription(JointState, 'joint_states', self.joint_state_callback, 10)
         self.base_pose_sub = self.create_subscription(Pose, 'husky_controller/base_pose', self.base_pose_callback, 10)
         self.base_vel_sub  = self.create_subscription(Twist, 'husky_controller/base_vel', self.base_vel_callback, 10)
 

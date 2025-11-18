@@ -29,3 +29,10 @@
            type="UR5e::UR5eController"
            base_class_type="MujocoRosSim::ControllerInterface"/>
 </library>
+
+<!-- Mobile Manipulator -->
+<library path="fr3_husky_controller_plugins">
+    <class name="dyros_robot_menagerie/FR3HuskyController"
+           type="FR3Husky::FR3HuskyController"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>
