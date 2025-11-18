@@ -399,4 +399,80 @@
     <child link="fr3_link8"/>
   </joint>
   
+  <!-- Franka Gripper -->
+   <joint name="fr3_hand_joint" type="fixed">
+    <parent link="fr3_link8"/>
+    <child link="fr3_hand"/>
+    <origin rpy="0 0 -0.7853981633974483" xyz="0 0 0"/>
+  </joint>
+  <!-- sub-link defining detailed meshes for collision with environment -->
+  <link name="fr3_hand">
+    <visual name="fr3_hand_visual">
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/franka_fr3_torque/assets/hand.dae"/>
+      </geometry>
+    </visual>
+    <collision name="fr3_hand_collision">
+      <origin rpy="0 0 0" xyz="0 0 0.028"/>
+      <geometry>
+        <box size="0.04 0.201 0.075"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0000376 0.0119128 0.0207260"/>
+      <mass value="0.6544"/>
+      <inertia ixx="0.00186" ixy="0.0" ixz="0.0" iyy="0.0003" iyz="-2e-05" izz="0.00174"/>
+    </inertial>
+  </link>
+  <!-- Define the hand_tcp frame -->
+  <link name="fr3_hand_tcp"/>
+  <joint name="fr3_hand_tcp_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.1034"/>
+    <parent link="fr3_hand"/>
+    <child link="fr3_hand_tcp"/>
+  </joint>
+  <link name="fr3_leftfinger">
+    <visual name="fr3_leftfinger_visual">
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/franka_fr3_torque/assets/finger.dae"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0.0152850 0.0219675"/>
+      <mass value="0.0291"/>
+      <inertia ixx="8.49e-06" ixy="0.0" ixz="0.0" iyy="8.53e-06" iyz="-1.06e-06" izz="1.77e-06"/>
+    </inertial>
+  </link>
+  <link name="fr3_rightfinger">
+    <visual name="fr3_rightfinger_visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/franka_fr3_torque/assets/finger.dae"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0.0152850 0.0219675"/>
+      <mass value="0.0291"/>
+      <inertia ixx="8.49e-06" ixy="0.0" ixz="0.0" iyy="8.53e-06" iyz="-1.06e-06" izz="1.77e-06"/>
+    </inertial>
+  </link>
+  <joint name="fr3_finger_joint1" type="fixed">
+    <parent link="fr3_hand"/>
+    <child link="fr3_leftfinger"/>
+    <origin rpy="0 0 0" xyz="0 0 0.0584"/>
+    <!-- <axis xyz="0 1 0"/>
+    <limit effort="100" lower="0.0" upper="0.04" velocity="0.2"/>
+    <dynamics damping="0.3"/> -->
+  </joint>
+  <joint name="fr3_finger_joint2" type="fixed">
+    <parent link="fr3_hand"/>
+    <child link="fr3_rightfinger"/>
+    <origin rpy="0 0 3.141592653589793" xyz="0 0 0.0584"/>
+    <!-- <axis xyz="0 1 0"/>
+    <limit effort="100" lower="0.0" upper="0.04" velocity="0.2"/>
+    <mimic joint="fr3_finger_joint1"/>
+    <dynamics damping="0.3"/> -->
+  </joint>
+
 </robot>
