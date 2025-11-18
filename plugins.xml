@@ -36,3 +36,9 @@
            type="FR3Husky::FR3HuskyController"
            base_class_type="MujocoRosSim::ControllerInterface"/>
 </library>
+
+<library path="fr3_xls_controller_plugins">
+    <class name="dyros_robot_menagerie/FR3XLSController"
+           type="FR3XLS::FR3XLSController"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>
