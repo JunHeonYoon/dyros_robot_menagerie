@@ -419,9 +419,9 @@
       </geometry>
     </collision>
     <inertial>
-      <origin rpy="0 0 0" xyz="-0.0000376 0.0119128 0.0207260"/>
-      <mass value="0.6544"/>
-      <inertia ixx="0.00186" ixy="0.0" ixz="0.0" iyy="0.0003" iyz="-2e-05" izz="0.00174"/>
+      <origin rpy="0 0 0" xyz="-0.01 0.0 0.03"/>
+      <mass value="0.73"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0017"/>
     </inertial>
   </link>
   <!-- Define the hand_tcp frame -->
@@ -439,9 +439,9 @@
     </visual>
 
     <inertial>
-      <origin rpy="0 0 0" xyz="0 0.0152850 0.0219675"/>
-      <mass value="0.0291"/>
-      <inertia ixx="8.49e-06" ixy="0.0" ixz="0.0" iyy="8.53e-06" iyz="-1.06e-06" izz="1.77e-06"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.015"/>
+      <inertia ixx="2.3749999999999997e-06" ixy="0.0" ixz="0.0" iyy="2.3749999999999997e-06" iyz="0.0" izz="7.5e-07"/>
     </inertial>
   </link>
   <link name="fr3_rightfinger">
@@ -452,9 +452,9 @@
       </geometry>
     </visual>
     <inertial>
-      <origin rpy="0 0 0" xyz="0 0.0152850 0.0219675"/>
-      <mass value="0.0291"/>
-      <inertia ixx="8.49e-06" ixy="0.0" ixz="0.0" iyy="8.53e-06" iyz="-1.06e-06" izz="1.77e-06"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.015"/>
+      <inertia ixx="2.3749999999999997e-06" ixy="0.0" ixz="0.0" iyy="2.3749999999999997e-06" iyz="0.0" izz="7.5e-07"/>
     </inertial>
   </link>
   <joint name="fr3_finger_joint1" type="fixed">

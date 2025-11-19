@@ -8,7 +8,7 @@ namespace FR3
             ament_index_cpp::get_package_share_directory("dyros_robot_menagerie") + "/robot/fr3.srdf",
             ament_index_cpp::get_package_share_directory("mujoco_ros_sim")) 
     {
-        ee_name_ = "fr3_link8";
+        ee_name_ = "fr3_hand_tcp";
     }
 
     Affine3d FR3RobotData::computePose(const VectorXd& q)

@@ -46,7 +46,7 @@ namespace FR3XLS
         ament_index_cpp::get_package_share_directory("dyros_robot_menagerie") + "/robot/fr3_xls.urdf",
         ament_index_cpp::get_package_share_directory("dyros_robot_menagerie") + "/robot/fr3_xls.srdf")
     {
-        ee_name_ = "fr3_link8";
+        ee_name_ = "fr3_hand_tcp";
     }
 
     Affine3d FR3XLSRobotData::computePose(const VectorXd& q_virtual,
