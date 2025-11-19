@@ -182,7 +182,13 @@
         <geometry>
           <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/fr3_husky/assets/husky/wheel.dae" />
         </geometry>
-      </visual>
+    </visual>
+    <collision>
+      <origin rpy="1.570795 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1143" radius="0.1651"/>
+      </geometry>
+    </collision>
   </link>
   <joint name="front_left_wheel_joint" type="fixed">
     <parent link="base_link"/>
@@ -196,7 +202,13 @@
         <geometry>
           <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/fr3_husky/assets/husky/wheel.dae" />
         </geometry>
-      </visual>
+    </visual>
+    <collision>
+      <origin rpy="1.570795 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1143" radius="0.1651"/>
+      </geometry>
+    </collision>
   </link>
   <joint name="front_right_wheel_joint" type="fixed">
     <parent link="base_link"/>
@@ -210,7 +222,13 @@
         <geometry>
           <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/fr3_husky/assets/husky/wheel.dae" />
         </geometry>
-      </visual>
+    </visual>
+    <collision>
+      <origin rpy="1.570795 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1143" radius="0.1651"/>
+      </geometry>
+    </collision>
   </link>
   <joint name="rear_left_wheel_joint" type="fixed">
     <parent link="base_link"/>
@@ -224,7 +242,13 @@
         <geometry>
           <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/fr3_husky/assets/husky/wheel.dae" />
         </geometry>
-      </visual>
+    </visual>
+    <collision>
+      <origin rpy="1.570795 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1143" radius="0.1651"/>
+      </geometry>
+    </collision>
   </link>
   <joint name="rear_right_wheel_joint" type="fixed">
     <parent link="base_link"/>
