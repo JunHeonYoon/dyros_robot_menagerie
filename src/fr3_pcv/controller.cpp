@@ -211,7 +211,7 @@ namespace FR3PCV
                                          qdot_mani_desired);
             qdot_mobile_desired_ = qdot_mobile_desired;
             qdot_mani_desired_ = qdot_mani_desired;
-            qdot_mani_desired_ += dt_ * qdot_mani_desired_;
+            q_mani_desired_ += dt_ * qdot_mani_desired_;
             torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueStep(q_mani_desired_, qdot_mani_desired_);
         }
         else if(mode_ == "QPID")
