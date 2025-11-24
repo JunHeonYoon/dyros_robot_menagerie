@@ -42,3 +42,9 @@
            type="FR3XLS::FR3XLSController"
            base_class_type="MujocoRosSim::ControllerInterface"/>
 </library>
+
+<library path="fr3_pcv_controller_plugins">
+    <class name="dyros_robot_menagerie/FR3PCVController"
+           type="FR3PCV::FR3PCVController"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>
