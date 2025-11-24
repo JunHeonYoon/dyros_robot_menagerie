@@ -40,7 +40,7 @@ def generate_launch_description():
             {'controller_class': 'dyros_robot_menagerie/FR3PCVController'},
             ## Python controller
             # {'controller_class': 'dyros_robot_menagerie/FR3PCVControllerPy'},
-            PathJoinSubstitution([FindPackageShare('dyros_robot_menagerie'), 'config', 'fr3_pcv.yaml']),
+            PathJoinSubstitution([FindPackageShare('dyros_robot_menagerie'), 'config', 'fr3_pcv_gain.yaml']),
         ],
         # prefix='gdb -ex run --args'
     )
