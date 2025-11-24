@@ -63,7 +63,7 @@ def generate_launch_description():
     rviz_config_file = os.path.join(
         get_package_share_directory("dyros_robot_menagerie"),
         "launch", 
-        "fr3_xls_rviz.rviz"
+        "fr3_pcv_rviz.rviz"
     )
 
     robot_state_publisher = Node(
