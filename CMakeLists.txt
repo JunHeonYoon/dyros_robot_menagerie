@@ -187,6 +187,30 @@ install(PROGRAMS    ${PROJECT_NAME}/fr3_xls/ros2_qt_gui.py
         DESTINATION lib/${PROJECT_NAME}
         RENAME      FR3XLSControllerQT
 )
+
+# =================== FR3 PCV ===================
+add_library(fr3_pcv_controller_plugins SHARED
+    src/fr3_pcv/controller.cpp
+    src/fr3_pcv/robot_data.cpp
+)
+ament_target_dependencies(fr3_pcv_controller_plugins
+    rclcpp 
+    pluginlib 
+    mujoco_ros_sim
+)
+
+target_link_libraries(fr3_pcv_controller_plugins
+    dyros_robot_controller::dyros_robot_controller
+)
+
+install(TARGETS fr3_pcv_controller_plugins
+        LIBRARY DESTINATION lib
+)
+
+install(PROGRAMS    ${PROJECT_NAME}/fr3_pcv/ros2_qt_gui.py
+        DESTINATION lib/${PROJECT_NAME}
+        RENAME      FR3PCVControllerQT
+)
 # ===================================================
 
 
