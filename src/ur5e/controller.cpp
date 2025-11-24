@@ -35,6 +35,23 @@ namespace UR5e
         x_goal_.setIdentity();
         
         q_desired_.setZero();
+
+        std::vector<double> task_kp_vec       = node->declare_parameter<std::vector<double>>("task_gains.kp",       {100.0, 100.0, 100.0, 100.0, 100.0, 100.0});
+        std::vector<double> task_kv_vec       = node->declare_parameter<std::vector<double>>("task_gains.kv",       {20.0,  20.0,  20.0,  20.0,  20.0,  20.0});
+        std::vector<double> qpik_tracking_vec = node->declare_parameter<std::vector<double>>("QPIK_gains.tracking", {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+        std::vector<double> qpik_damping_vec  = node->declare_parameter<std::vector<double>>("QPIK_gains.damping",  {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+
+        task_kp_        = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),       task_kp_vec.size());
+        task_kv_        = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),       task_kv_vec.size());
+        qpik_tracking_  = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(), qpik_tracking_vec.size());
+        qpik_damping_   = Eigen::Map<Eigen::VectorXd>(qpik_damping_vec.data(),  qpik_damping_vec.size());
+
+        if (task_kp_.size() != TASK_DOF || task_kv_.size() != TASK_DOF) RCLCPP_WARN(node->get_logger(), "task gains size mismatch (expected 6)");
+        if (qpik_tracking_.size() != TASK_DOF) RCLCPP_WARN(node->get_logger(), "QPIK tracking size mismatch (expected 6)");
+        if (qpik_damping_.size() != JOINT_DOF) RCLCPP_WARN(node->get_logger(), "QPIK damping size mismatch (expected 6)");
+
+        robot_controller_->setTaskGain(task_kp_, task_kv_);
+        robot_controller_->setQPIKGain(qpik_tracking_, qpik_damping_);
         
         std::ostringstream oss;
         oss << "\n=================================================================\n"

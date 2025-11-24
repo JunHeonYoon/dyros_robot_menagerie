@@ -106,5 +106,11 @@ MuJoCo Model Information: universal_robots_ur5e
 
             //// control input
             JointVec q_desired_;
+
+            //// gains
+            TaskVec  task_kp_;
+            TaskVec  task_kv_;
+            TaskVec  qpik_tracking_;
+            JointVec qpik_damping_;
     };
 } // namespace UR5e

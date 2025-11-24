@@ -38,6 +38,35 @@ namespace FR3
         x_goal_.setIdentity();
         
         torque_desired_.setZero();
+
+        std::vector<double> joint_kp_vec      = node->declare_parameter<std::vector<double>>("joint_gains.kp",      {600.0, 600.0, 600.0, 600.0, 250.0, 150.0, 50.0});
+        std::vector<double> joint_kv_vec      = node->declare_parameter<std::vector<double>>("joint_gains.kv",      {30.0,  30.0,  30.0,  30.0,  10.0,  10.0,  5.0});
+        std::vector<double> task_kp_vec       = node->declare_parameter<std::vector<double>>("task_gains.kp",       {100.0, 100.0, 100.0, 100.0, 100.0, 100.0});
+        std::vector<double> task_kv_vec       = node->declare_parameter<std::vector<double>>("task_gains.kv",       {20.0,  20.0,  20.0,  20.0,  20.0,  20.0});
+        std::vector<double> qpik_tracking_vec = node->declare_parameter<std::vector<double>>("QPIK_gains.tracking", {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+        std::vector<double> qpik_damping_vec  = node->declare_parameter<std::vector<double>>("QPIK_gains.damping",  {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+        std::vector<double> qpid_tracking_vec = node->declare_parameter<std::vector<double>>("QPID_gains.tracking", {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+        std::vector<double> qpid_damping_vec  = node->declare_parameter<std::vector<double>>("QPID_gains.damping",  {0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01});
+
+        joint_kp_       = Eigen::Map<Eigen::VectorXd>(joint_kp_vec.data(),      joint_kp_vec.size());
+        joint_kv_       = Eigen::Map<Eigen::VectorXd>(joint_kv_vec.data(),      joint_kv_vec.size());
+        task_kp_        = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),       task_kp_vec.size());
+        task_kv_        = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),       task_kv_vec.size());
+        qpik_tracking_  = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(), qpik_tracking_vec.size());
+        qpik_damping_   = Eigen::Map<Eigen::VectorXd>(qpik_damping_vec.data(),  qpik_damping_vec.size());
+        qpid_tracking_  = Eigen::Map<Eigen::VectorXd>(qpid_tracking_vec.data(), qpid_tracking_vec.size());
+        qpid_damping_   = Eigen::Map<Eigen::VectorXd>(qpid_damping_vec.data(),  qpid_damping_vec.size());
+
+        if (joint_kp_.size() != JOINT_DOF || joint_kv_.size() != JOINT_DOF)         RCLCPP_WARN(node->get_logger(), "joint gains size mismatch (expected 7)");
+        if (task_kp_.size() != TASK_DOF || task_kv_.size() != TASK_DOF)             RCLCPP_WARN(node->get_logger(), "task gains size mismatch (expected 6)");
+        if (qpik_tracking_.size() != TASK_DOF || qpid_tracking_.size() != TASK_DOF) RCLCPP_WARN(node->get_logger(), "QPIK/QPID tracking size mismatch (expected 6)");
+        if (qpik_damping_.size() != JOINT_DOF || qpid_damping_.size() != JOINT_DOF) RCLCPP_WARN(node->get_logger(), "QPIK/QPID damping size mismatch (expected 7)");
+
+        robot_controller_->setJointGain(joint_kp_, joint_kv_);
+        robot_controller_->setTaskGain(task_kp_, task_kv_);
+        robot_controller_->setQPIKGain(qpik_tracking_, qpik_damping_);
+        robot_controller_->setQPIDGain(qpid_tracking_, qpid_damping_);
+
         
         std::ostringstream oss;
         oss << "\n=================================================================\n"
@@ -116,7 +145,8 @@ namespace FR3
                                                                       qdot_init_,
                                                                       current_time_,
                                                                       control_start_time_,
-                                                                      4.0);
+                                                                      4.0,
+                                                                      false);
         }
         else if(mode_ == "CLIK")
         {
@@ -136,7 +166,7 @@ namespace FR3
                                                          4.0,
                                                          robot_data_->getEEName());
             q_desired_ += dt_ * qdot_desired_;
-            torque_desired_ = robot_controller_->moveJointTorqueStep(q_desired_, qdot_desired_);
+            torque_desired_ = robot_controller_->moveJointTorqueStep(q_desired_, qdot_desired_, false);
         }
         else if(mode_ == "QPIK")
         {
@@ -156,7 +186,7 @@ namespace FR3
                                                          4.0,
                                                          robot_data_->getEEName());
             q_desired_ += dt_ * qdot_desired_;
-            torque_desired_ = robot_controller_->moveJointTorqueStep(q_desired_, qdot_desired_);
+            torque_desired_ = robot_controller_->moveJointTorqueStep(q_desired_, qdot_desired_, false);
         }
         else if(mode_ == "OSF")
         {
@@ -198,6 +228,11 @@ namespace FR3
                                                            4.0,
                                                            robot_data_->getEEName());
         }
+        else if(mode_ == "Gravity_compensattion_W_QPID")
+        {
+            torque_desired_ = robot_controller_->QPID(TaskVec::Zero(),
+                                                      robot_data_->getEEName());
+        }
         else
         {
             torque_desired_ = robot_data_->getGravity();
@@ -230,6 +265,7 @@ namespace FR3
         else if(msg->data == 3) setMode("QPIK");
         else if(msg->data == 4) setMode("OSF");
         else if(msg->data == 5) setMode("QPID");
+        else if(msg->data == 6) setMode("Gravity_compensattion_W_QPID");
         else                    setMode("NONE");
     }
 

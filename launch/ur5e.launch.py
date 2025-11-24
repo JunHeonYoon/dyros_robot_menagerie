@@ -2,6 +2,8 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 import os
 from ament_index_python.packages import get_package_share_directory
+from launch.substitutions import PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     mujoco_ros_sim_node = Node(
@@ -15,6 +17,7 @@ def generate_launch_description():
             {'controller_class': 'dyros_robot_menagerie/UR5eController'},
             ## Python controller
             # {'controller_class': 'dyros_robot_menagerie/UR5eControllerPy'},
+            PathJoinSubstitution([FindPackageShare('dyros_robot_menagerie'), 'config', 'ur5e_gain.yaml']),
         ],
         # prefix='gdb -ex run --args'
     )

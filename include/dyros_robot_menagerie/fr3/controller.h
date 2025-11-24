@@ -122,5 +122,15 @@ MuJoCo Model Information: franka_fr3_torque
 
             //// control input
             JointVec torque_desired_;
+
+            //// gains
+            JointVec joint_kp_;
+            JointVec joint_kv_;
+            TaskVec  task_kp_;
+            TaskVec  task_kv_;
+            TaskVec  qpik_tracking_;
+            JointVec qpik_damping_;
+            TaskVec  qpid_tracking_;
+            JointVec qpid_damping_;
     };
 } // namespace FR3Controller

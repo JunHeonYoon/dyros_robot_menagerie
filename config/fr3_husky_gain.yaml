@@ -1,0 +1,72 @@
+/mujoco_ros_sim_node:
+  ros__parameters:
+    manipulator_joint_gains:  # w.o using mass matrix
+      kp:
+        - 600.0 # joint1
+        - 600.0 # joint2
+        - 600.0 # joint3
+        - 600.0 # joint4
+        - 250.0 # joint5
+        - 150.0 # joint6
+        - 50.0  # joint7
+      kv:
+        - 30.0 # joint1
+        - 30.0 # joint2
+        - 30.0 # joint3
+        - 30.0 # joint4
+        - 10.0 # joint5
+        - 10.0 # joint6
+        - 5.0  # joint7
+
+    task_gains:
+      kp:
+        - 100.0 # x
+        - 100.0 # y
+        - 100.0 # z
+        - 100.0 # r
+        - 100.0 # p
+        - 100.0 # y
+      kv:
+        - 20.0 # x
+        - 20.0 # y
+        - 20.0 # z
+        - 20.0 # r
+        - 20.0 # p
+        - 20.0 # y
+
+    QPIK_gains:
+      tracking:
+        - 1.0 # x
+        - 1.0 # y
+        - 1.0 # z
+        - 1.0 # r
+        - 1.0 # p
+        - 1.0 # y
+      damping:
+        - 10.0 # left wheel
+        - 10.0 # right wheel
+        - 1.0 # joint 1
+        - 1.0 # joint 2
+        - 1.0 # joint 3
+        - 1.0 # joint 4
+        - 1.0 # joint 5
+        - 1.0 # joint 6
+        - 1.0 # joint 7
+
+    QPID_gains:
+      tracking:
+        - 1.0 # x
+        - 1.0 # y
+        - 1.0 # z
+        - 1.0 # r
+        - 1.0 # p
+        - 1.0 # y
+      damping:
+        - 0.1  # left wheel
+        - 0.1  # right wheel
+        - 0.01 # joint 2
+        - 0.01 # joint 3
+        - 0.01 # joint 4
+        - 0.01 # joint 5
+        - 0.01 # joint 6
+        - 0.01 # joint 7
