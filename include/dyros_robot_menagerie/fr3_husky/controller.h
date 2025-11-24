@@ -162,6 +162,7 @@ MuJoCo Model Information: fr3_husky
             TaskVec      qpik_tracking_;
             AactuatorVec qpik_damping_;
             TaskVec      qpid_tracking_;
-            AactuatorVec qpid_damping_;
+            AactuatorVec qpid_vel_damping_;
+            AactuatorVec qpid_acc_damping_;
     };
 } // namespace FR3Husky

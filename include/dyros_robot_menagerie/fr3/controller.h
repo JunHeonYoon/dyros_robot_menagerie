@@ -131,6 +131,7 @@ MuJoCo Model Information: franka_fr3_torque
             TaskVec  qpik_tracking_;
             JointVec qpik_damping_;
             TaskVec  qpid_tracking_;
-            JointVec qpid_damping_;
+            JointVec qpid_vel_damping_;
+            JointVec qpid_acc_damping_;
     };
 } // namespace FR3Controller

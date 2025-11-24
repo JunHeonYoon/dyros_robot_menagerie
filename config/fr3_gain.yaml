@@ -59,7 +59,15 @@
         - 1.0 # r
         - 1.0 # p
         - 1.0 # y
-      damping:
+      vel_damping:
+        - 0.1 # joint 1
+        - 0.1 # joint 2
+        - 0.1 # joint 3
+        - 0.1 # joint 4
+        - 0.1 # joint 5
+        - 0.1 # joint 6
+        - 0.1 # joint 7
+      acc_damping:
         - 0.01 # joint 1
         - 0.01 # joint 2
         - 0.01 # joint 3
