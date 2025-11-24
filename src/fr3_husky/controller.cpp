@@ -61,12 +61,12 @@ namespace FR3Husky
         std::vector<double> task_kp_vec       = node->declare_parameter<std::vector<double>>("task_gains.kp",              {100.0, 100.0, 100.0, 100.0, 100.0, 100.0});
         std::vector<double> task_kv_vec       = node->declare_parameter<std::vector<double>>("task_gains.kv",              {20.0,  20.0,  20.0,  20.0,  20.0,  20.0});
         std::vector<double> qpik_tracking_vec = node->declare_parameter<std::vector<double>>("QPIK_gains.tracking",        {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpik_damping_vec  = node->declare_parameter<std::vector<double>>("QPIK_gains.damping",         {10., 10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+        std::vector<double> qpik_damping_vec  = node->declare_parameter<std::vector<double>>("QPIK_gains.damping",         {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
         std::vector<double> qpid_tracking_vec = node->declare_parameter<std::vector<double>>("QPID_gains.tracking",        {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpid_damping_vec  = node->declare_parameter<std::vector<double>>("QPID_gains.damping",         {0.1, 0.1, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01});
-
-        mani_joint_kp_   = Eigen::Map<Eigen::VectorXd>(mani_joint_kp_vec.data(), mani_joint_kp_vec.size());
-        mani_joint_kv_   = Eigen::Map<Eigen::VectorXd>(mani_joint_kv_vec.data(), mani_joint_kv_vec.size());
+        std::vector<double> qpid_damping_vec  = node->declare_parameter<std::vector<double>>("QPID_gains.damping",         {0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01});
+        
+        mani_joint_kp_  = Eigen::Map<Eigen::VectorXd>(mani_joint_kp_vec.data(), mani_joint_kp_vec.size());
+        mani_joint_kv_  = Eigen::Map<Eigen::VectorXd>(mani_joint_kv_vec.data(), mani_joint_kv_vec.size());
         task_kp_        = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),       task_kp_vec.size());
         task_kv_        = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),       task_kv_vec.size());
         qpik_tracking_  = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(), qpik_tracking_vec.size());
@@ -228,7 +228,7 @@ namespace FR3Husky
                                          qdot_mani_desired);
             qdot_mobile_desired_ = qdot_mobile_desired;
             qdot_mani_desired_ = qdot_mani_desired;
-            qdot_mani_desired_ += dt_ * qdot_mani_desired_;
+            q_mani_desired_ += dt_ * qdot_mani_desired_;
             torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueStep(q_mani_desired_, qdot_mani_desired_, false);
         }
         else if(mode_ == "QPID")
