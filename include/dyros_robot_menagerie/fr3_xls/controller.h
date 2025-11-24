@@ -203,5 +203,14 @@ MuJoCo Model Information: fr3_xls
             ManiVec torque_mani_desired_;
             MobiVec qdot_mobile_desired_;
 
+            //// gains
+            ManiVec      mani_joint_kp_;
+            ManiVec      mani_joint_kv_;
+            TaskVec      task_kp_;
+            TaskVec      task_kv_;
+            TaskVec      qpik_tracking_;
+            AactuatorVec qpik_damping_;
+            TaskVec      qpid_tracking_;
+            AactuatorVec qpid_damping_;
     };
 } // namespace FR3XLS
