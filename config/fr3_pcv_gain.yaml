@@ -50,14 +50,14 @@
         - 10.0 # joint 5
         - 10.0 # joint 6
         - 10.0 # joint 7
-        - 0.001 # front left steer
-        - 0.001 # front left rotate
-        - 0.001 # front right steer
-        - 0.001 # front right rotate
-        - 0.001 # rear left steer
-        - 0.001 # rear left rotate
-        - 0.001 # rear right steer
-        - 0.001 # rear right rotate
+        - 0.2 # front left steer
+        - 0.2 # front left rotate
+        - 0.2 # front right steer
+        - 0.2 # front right rotate
+        - 0.2 # rear left steer
+        - 0.2 # rear left rotate
+        - 0.2 # rear right steer
+        - 0.2 # rear right rotate
 
     QPID_gains:
       tracking:
