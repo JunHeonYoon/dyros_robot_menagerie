@@ -260,7 +260,7 @@
   <joint name="fr3_base_joint" type="fixed">
     <parent link="base_link"/>
     <child link="fr3_link0"/>
-    <origin rpy="0 0 0" xyz="0.36 0.0 0.256"/>
+    <origin rpy="0 0 0" xyz="0.36 0.0 0.27"/>
   </joint>
 
   <link name="fr3_link0">
