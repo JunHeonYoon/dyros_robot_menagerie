@@ -75,14 +75,14 @@
         - 0.1 # joint 5
         - 0.1 # joint 6
         - 0.1 # joint 7
-        - 0.1 # front left steer
-        - 0.1 # front left rotate
-        - 0.1 # front right steer
-        - 0.1 # front right rotate
-        - 0.1 # rear left steer
-        - 0.1 # rear left rotate
-        - 0.1 # rear right steer
-        - 0.1 # rear right rotate
+        - 10.0 # front left steer
+        - 10.0 # front left rotate
+        - 10.0 # front right steer
+        - 10.0 # front right rotate
+        - 10.0 # rear left steer
+        - 10.0 # rear left rotate
+        - 10.0 # rear right steer
+        - 10.0 # rear right rotate
       acc_damping:
         - 0.01 # joint 1
         - 0.01 # joint 2
@@ -91,11 +91,11 @@
         - 0.01 # joint 5
         - 0.01 # joint 6
         - 0.01 # joint 7
-        - 0.01 # front left steer
-        - 0.01 # front left rotate
-        - 0.01 # front right steer
-        - 0.01 # front right rotate
-        - 0.01 # rear left steer
-        - 0.01 # rear left rotate
-        - 0.01 # rear right steer
-        - 0.01 # rear right rotate
+        - 0.0001 # front left steer
+        - 0.0001 # front left rotate
+        - 0.0001 # front right steer
+        - 0.0001 # front right rotate
+        - 0.0001 # rear left steer
+        - 0.0001 # rear left rotate
+        - 0.0001 # rear right steer
+        - 0.0001 # rear right rotate

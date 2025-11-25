@@ -50,10 +50,10 @@
         - 10.0 # joint 5
         - 10.0 # joint 6
         - 10.0 # joint 7
-        - 10.0 # front left wheel
-        - 10.0 # front right wheel
-        - 10.0 # rear left wheel
-        - 10.0 # rear right wheel
+        - 0.2 # front left wheel
+        - 0.2 # front right wheel
+        - 0.2 # rear left wheel
+        - 0.2 # rear right wheel
 
     QPID_gains:
       tracking:
@@ -71,10 +71,10 @@
         - 0.1 # joint 5
         - 0.1 # joint 6
         - 0.1 # joint 7
-        - 1.0  # freont left wheel
-        - 1.0  # freont right wheel
-        - 1.0  # rear left wheel
-        - 1.0  # rear right wheel
+        - 10.0  # freont left wheel
+        - 10.0  # freont right wheel
+        - 10.0  # rear left wheel
+        - 10.0  # rear right wheel
       acc_damping:
         - 0.01 # joint 1
         - 0.01 # joint 2
@@ -83,7 +83,7 @@
         - 0.01 # joint 5
         - 0.01 # joint 6
         - 0.01 # joint 7
-        - 0.1  # freont left wheel
-        - 0.1  # freont right wheel
-        - 0.1  # rear left wheel
-        - 0.1  # rear right wheel
+        - 0.0001  # freont left wheel
+        - 0.0001  # freont right wheel
+        - 0.0001  # rear left wheel
+        - 0.0001  # rear right wheel
