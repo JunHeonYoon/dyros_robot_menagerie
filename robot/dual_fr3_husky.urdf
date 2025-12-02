@@ -252,13 +252,13 @@
 
   <!-- Manipulator -->
    <!-- right -->
-  <joint name="r_fr3_base_joint" type="fixed">
+  <joint name="fr3_r_base_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="r_fr3_link0"/>
-    <origin rpy="0 0 0.523598776" xyz="0.345 0.215 0.26"/>
+    <child link="fr3_r_link0"/>
+    <origin rpy="0 0 -0.523598776" xyz="0.345 -0.215 0.26"/>
   </joint>
 
-  <link name="r_fr3_link0">
+  <link name="fr3_r_link0">
     <visual name="fr3_link0_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link0.dae"/>
@@ -295,7 +295,7 @@
     </inertial>
   </link>
 
-  <link name="r_fr3_link1">
+  <link name="fr3_r_link1">
     <visual name="fr3_link1_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link1.dae"/>
@@ -332,17 +332,17 @@
     </inertial>
   </link>
 
-  <joint name="r_fr3_joint1" type="revolute">
+  <joint name="fr3_r_joint1" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0.333"/>
-    <parent link="r_fr3_link0"/>
-    <child link="r_fr3_link1"/>
+    <parent link="fr3_r_link0"/>
+    <child link="fr3_r_link1"/>
     <axis xyz="0 0 1"/>
     <limit effort="87.0" lower="-2.7437" upper="2.7437" velocity="2.62"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.7437" soft_upper_limit="2.7437"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="r_fr3_link2">
+  <link name="fr3_r_link2">
     <visual name="fr3_link2_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link2.dae"/>
@@ -379,17 +379,17 @@
     </inertial>
   </link>
 
-  <joint name="r_fr3_joint2" type="revolute">
+  <joint name="fr3_r_joint2" type="revolute">
     <origin rpy="-1.570796326794897 0 0" xyz="0 0 0"/>
-    <parent link="r_fr3_link1"/>
-    <child link="r_fr3_link2"/>
+    <parent link="fr3_r_link1"/>
+    <child link="fr3_r_link2"/>
     <axis xyz="0 0 1"/>
     <limit effort="87.0" lower="-1.7837" upper="1.7837" velocity="2.62"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.7837" soft_upper_limit="1.7837"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="r_fr3_link3">
+  <link name="fr3_r_link3">
     <visual name="fr3_link3_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link3.dae"/>
@@ -420,17 +420,17 @@
     </inertial>
   </link>
 
-  <joint name="r_fr3_joint3" type="revolute">
+  <joint name="fr3_r_joint3" type="revolute">
     <origin rpy="1.570796326794897 0 0" xyz="0 -0.316 0"/>
-    <parent link="r_fr3_link2"/>
-    <child link="r_fr3_link3"/>
+    <parent link="fr3_r_link2"/>
+    <child link="fr3_r_link3"/>
     <axis xyz="0 0 1"/>
     <limit effort="87.0" lower="-2.9007" upper="2.9007" velocity="2.62"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.9007" soft_upper_limit="2.9007"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="r_fr3_link4">
+  <link name="fr3_r_link4">
     <visual name="fr3_link4_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link4.dae"/>
@@ -473,17 +473,17 @@
     </inertial>
   </link>
 
-  <joint name="r_fr3_joint4" type="revolute">
+  <joint name="fr3_r_joint4" type="revolute">
     <origin rpy="1.570796326794897 0 0" xyz="0.0825 0 0"/>
-    <parent link="r_fr3_link3"/>
-    <child link="r_fr3_link4"/>
+    <parent link="fr3_r_link3"/>
+    <child link="fr3_r_link4"/>
     <axis xyz="0 0 1"/>
     <limit effort="87.0" lower="-3.0421" upper="-0.1518" velocity="2.62"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3.0421" soft_upper_limit="-0.1518"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="r_fr3_link5">
+  <link name="fr3_r_link5">
     <visual name="fr3_link5_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link5.dae"/>
@@ -532,16 +532,16 @@
     </inertial>
 
   </link>
-  <joint name="r_fr3_joint5" type="revolute">
+  <joint name="fr3_r_joint5" type="revolute">
     <origin rpy="-1.570796326794897 0 0" xyz="-0.0825 0.384 0"/>
-    <parent link="r_fr3_link4"/>
-    <child link="r_fr3_link5"/>
+    <parent link="fr3_r_link4"/>
+    <child link="fr3_r_link5"/>
     <axis xyz="0 0 1"/>
     <limit effort="12.0" lower="-2.8065" upper="2.8065" velocity="5.26"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8065" soft_upper_limit="2.8065"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
-  <link name="r_fr3_link6">
+  <link name="fr3_r_link6">
     <visual name="fr3_link6_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link6.dae"/>
@@ -578,17 +578,17 @@
     </inertial>
   </link>
 
-  <joint name="r_fr3_joint6" type="revolute">
+  <joint name="fr3_r_joint6" type="revolute">
     <origin rpy="1.570796326794897 0 0" xyz="0 0 0"/>
-    <parent link="r_fr3_link5"/>
-    <child link="r_fr3_link6"/>
+    <parent link="fr3_r_link5"/>
+    <child link="fr3_r_link6"/>
     <axis xyz="0 0 1"/>
     <limit effort="12.0" lower="0.5445" upper="4.5169" velocity="4.18"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="0.5445" soft_upper_limit="4.5169"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="r_fr3_link7">
+  <link name="fr3_r_link7">
     <visual name="fr3_link7_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link7.dae"/>
@@ -631,33 +631,33 @@
     </inertial>
   </link>
 
-  <joint name="r_fr3_joint7" type="revolute">
+  <joint name="fr3_r_joint7" type="revolute">
     <origin rpy="1.570796326794897 0 0" xyz="0.088 0 0"/>
-    <parent link="r_fr3_link6"/>
-    <child link="r_fr3_link7"/>
+    <parent link="fr3_r_link6"/>
+    <child link="fr3_r_link7"/>
     <axis xyz="0 0 1"/>
     <limit effort="12.0" lower="-3.0159" upper="3.0159" velocity="5.26"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3.0159" soft_upper_limit="3.0159"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="r_fr3_link8"/>
+  <link name="fr3_r_link8"/>
 
-  <joint name="r_fr3_joint8" type="fixed">
+  <joint name="fr3_r_joint8" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0.107"/>
-    <parent link="r_fr3_link7"/>
-    <child link="r_fr3_link8"/>
+    <parent link="fr3_r_link7"/>
+    <child link="fr3_r_link8"/>
   </joint>
 
   <!-- Franka Gripper -->
-   <joint name="r_fr3_hand_joint" type="fixed">
-    <parent link="r_fr3_link8"/>
-    <child link="r_fr3_hand"/>
+   <joint name="fr3_r_hand_joint" type="fixed">
+    <parent link="fr3_r_link8"/>
+    <child link="fr3_r_hand"/>
     <origin rpy="0 0 -0.7853981633974483" xyz="0 0 0"/>
   </joint>
 
   <!-- sub-link defining detailed meshes for collision with environment -->
-  <link name="r_fr3_hand">
+  <link name="fr3_r_hand">
     <visual name="fr3_hand_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/hand.dae"/>
@@ -677,15 +677,15 @@
   </link>
 
   <!-- Define the hand_tcp frame -->
-  <link name="r_fr3_hand_tcp"/>
+  <link name="fr3_r_hand_tcp"/>
 
-  <joint name="r_fr3_hand_tcp_joint" type="fixed">
+  <joint name="fr3_r_hand_tcp_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0.1034"/>
-    <parent link="r_fr3_hand"/>
-    <child link="r_fr3_hand_tcp"/>
+    <parent link="fr3_r_hand"/>
+    <child link="fr3_r_hand_tcp"/>
   </joint>
 
-  <link name="r_fr3_leftfinger">
+  <link name="fr3_r_leftfinger">
     <visual name="fr3_leftfinger_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/finger.dae"/>
@@ -698,7 +698,7 @@
     </inertial>
   </link>
 
-  <link name="r_fr3_rightfinger">
+  <link name="fr3_r_rightfinger">
     <visual name="fr3_rightfinger_visual">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
@@ -712,18 +712,18 @@
     </inertial>
   </link>
 
-  <joint name="r_fr3_finger_joint1" type="fixed">
-    <parent link="r_fr3_hand"/>
-    <child link="r_fr3_leftfinger"/>
+  <joint name="fr3_r_finger_joint1" type="fixed">
+    <parent link="fr3_r_hand"/>
+    <child link="fr3_r_leftfinger"/>
     <origin rpy="0 0 0" xyz="0 0 0.0584"/>
     <!-- <axis xyz="0 1 0"/>
     <limit effort="100" lower="0.0" upper="0.04" velocity="0.2"/>
     <dynamics damping="0.3"/> -->
   </joint>
 
-  <joint name="r_fr3_finger_joint2" type="fixed">
-    <parent link="r_fr3_hand"/>
-    <child link="r_fr3_rightfinger"/>
+  <joint name="fr3_r_finger_joint2" type="fixed">
+    <parent link="fr3_r_hand"/>
+    <child link="fr3_r_rightfinger"/>
     <origin rpy="0 0 3.141592653589793" xyz="0 0 0.0584"/>
     <!-- <axis xyz="0 1 0"/>
     <limit effort="100" lower="0.0" upper="0.04" velocity="0.2"/>
@@ -732,13 +732,13 @@
   </joint>
 
   <!-- left -->
-  <joint name="l_fr3_base_joint" type="fixed">
+  <joint name="fr3_l_base_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="l_fr3_link0"/>
-    <origin rpy="0 0 -0.523598776" xyz="0.345 -0.215 0.26"/>
+    <child link="fr3_l_link0"/>
+    <origin rpy="0 0 0.523598776" xyz="0.345 0.215 0.26"/>
   </joint>
 
-  <link name="l_fr3_link0">
+  <link name="fr3_l_link0">
     <visual name="fr3_link0_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link0.dae"/>
@@ -775,7 +775,7 @@
     </inertial>
   </link>
 
-  <link name="l_fr3_link1">
+  <link name="fr3_l_link1">
     <visual name="fr3_link1_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link1.dae"/>
@@ -812,17 +812,17 @@
     </inertial>
   </link>
 
-  <joint name="l_fr3_joint1" type="revolute">
+  <joint name="fr3_l_joint1" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0.333"/>
-    <parent link="l_fr3_link0"/>
-    <child link="l_fr3_link1"/>
+    <parent link="fr3_l_link0"/>
+    <child link="fr3_l_link1"/>
     <axis xyz="0 0 1"/>
     <limit effort="87.0" lower="-2.7437" upper="2.7437" velocity="2.62"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.7437" soft_upper_limit="2.7437"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="l_fr3_link2">
+  <link name="fr3_l_link2">
     <visual name="fr3_link2_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link2.dae"/>
@@ -859,17 +859,17 @@
     </inertial>
   </link>
 
-  <joint name="l_fr3_joint2" type="revolute">
+  <joint name="fr3_l_joint2" type="revolute">
     <origin rpy="-1.570796326794897 0 0" xyz="0 0 0"/>
-    <parent link="l_fr3_link1"/>
-    <child link="l_fr3_link2"/>
+    <parent link="fr3_l_link1"/>
+    <child link="fr3_l_link2"/>
     <axis xyz="0 0 1"/>
     <limit effort="87.0" lower="-1.7837" upper="1.7837" velocity="2.62"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.7837" soft_upper_limit="1.7837"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="l_fr3_link3">
+  <link name="fr3_l_link3">
     <visual name="fr3_link3_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link3.dae"/>
@@ -900,17 +900,17 @@
     </inertial>
   </link>
 
-  <joint name="l_fr3_joint3" type="revolute">
+  <joint name="fr3_l_joint3" type="revolute">
     <origin rpy="1.570796326794897 0 0" xyz="0 -0.316 0"/>
-    <parent link="l_fr3_link2"/>
-    <child link="l_fr3_link3"/>
+    <parent link="fr3_l_link2"/>
+    <child link="fr3_l_link3"/>
     <axis xyz="0 0 1"/>
     <limit effort="87.0" lower="-2.9007" upper="2.9007" velocity="2.62"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.9007" soft_upper_limit="2.9007"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="l_fr3_link4">
+  <link name="fr3_l_link4">
     <visual name="fr3_link4_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link4.dae"/>
@@ -953,17 +953,17 @@
     </inertial>
   </link>
 
-  <joint name="l_fr3_joint4" type="revolute">
+  <joint name="fr3_l_joint4" type="revolute">
     <origin rpy="1.570796326794897 0 0" xyz="0.0825 0 0"/>
-    <parent link="l_fr3_link3"/>
-    <child link="l_fr3_link4"/>
+    <parent link="fr3_l_link3"/>
+    <child link="fr3_l_link4"/>
     <axis xyz="0 0 1"/>
     <limit effort="87.0" lower="-3.0421" upper="-0.1518" velocity="2.62"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3.0421" soft_upper_limit="-0.1518"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="l_fr3_link5">
+  <link name="fr3_l_link5">
     <visual name="fr3_link5_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link5.dae"/>
@@ -1012,16 +1012,16 @@
     </inertial>
 
   </link>
-  <joint name="l_fr3_joint5" type="revolute">
+  <joint name="fr3_l_joint5" type="revolute">
     <origin rpy="-1.570796326794897 0 0" xyz="-0.0825 0.384 0"/>
-    <parent link="l_fr3_link4"/>
-    <child link="l_fr3_link5"/>
+    <parent link="fr3_l_link4"/>
+    <child link="fr3_l_link5"/>
     <axis xyz="0 0 1"/>
     <limit effort="12.0" lower="-2.8065" upper="2.8065" velocity="5.26"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8065" soft_upper_limit="2.8065"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
-  <link name="l_fr3_link6">
+  <link name="fr3_l_link6">
     <visual name="fr3_link6_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link6.dae"/>
@@ -1058,17 +1058,17 @@
     </inertial>
   </link>
 
-  <joint name="l_fr3_joint6" type="revolute">
+  <joint name="fr3_l_joint6" type="revolute">
     <origin rpy="1.570796326794897 0 0" xyz="0 0 0"/>
-    <parent link="l_fr3_link5"/>
-    <child link="l_fr3_link6"/>
+    <parent link="fr3_l_link5"/>
+    <child link="fr3_l_link6"/>
     <axis xyz="0 0 1"/>
     <limit effort="12.0" lower="0.5445" upper="4.5169" velocity="4.18"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="0.5445" soft_upper_limit="4.5169"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="l_fr3_link7">
+  <link name="fr3_l_link7">
     <visual name="fr3_link7_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/link7.dae"/>
@@ -1111,33 +1111,33 @@
     </inertial>
   </link>
 
-  <joint name="l_fr3_joint7" type="revolute">
+  <joint name="fr3_l_joint7" type="revolute">
     <origin rpy="1.570796326794897 0 0" xyz="0.088 0 0"/>
-    <parent link="l_fr3_link6"/>
-    <child link="l_fr3_link7"/>
+    <parent link="fr3_l_link6"/>
+    <child link="fr3_l_link7"/>
     <axis xyz="0 0 1"/>
     <limit effort="12.0" lower="-3.0159" upper="3.0159" velocity="5.26"/>
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3.0159" soft_upper_limit="3.0159"/>
     <dynamics D="1" K="7000" damping="0.003" friction="0.2" mu_coulomb="0" mu_viscous="16"/>
   </joint>
 
-  <link name="l_fr3_link8"/>
+  <link name="fr3_l_link8"/>
 
-  <joint name="l_fr3_joint8" type="fixed">
+  <joint name="fr3_l_joint8" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0.107"/>
-    <parent link="l_fr3_link7"/>
-    <child link="l_fr3_link8"/>
+    <parent link="fr3_l_link7"/>
+    <child link="fr3_l_link8"/>
   </joint>
 
   <!-- Franka Gripper -->
-   <joint name="l_fr3_hand_joint" type="fixed">
-    <parent link="l_fr3_link8"/>
-    <child link="l_fr3_hand"/>
+   <joint name="fr3_l_hand_joint" type="fixed">
+    <parent link="fr3_l_link8"/>
+    <child link="fr3_l_hand"/>
     <origin rpy="0 0 -0.7853981633974483" xyz="0 0 0"/>
   </joint>
 
   <!-- sub-link defining detailed meshes for collision with environment -->
-  <link name="l_fr3_hand">
+  <link name="fr3_l_hand">
     <visual name="fr3_hand_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/hand.dae"/>
@@ -1157,15 +1157,15 @@
   </link>
 
   <!-- Define the hand_tcp frame -->
-  <link name="l_fr3_hand_tcp"/>
+  <link name="fr3_l_hand_tcp"/>
 
-  <joint name="l_fr3_hand_tcp_joint" type="fixed">
+  <joint name="fr3_l_hand_tcp_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0.1034"/>
-    <parent link="l_fr3_hand"/>
-    <child link="l_fr3_hand_tcp"/>
+    <parent link="fr3_l_hand"/>
+    <child link="fr3_l_hand_tcp"/>
   </joint>
 
-  <link name="l_fr3_leftfinger">
+  <link name="fr3_l_leftfinger">
     <visual name="fr3_leftfinger_visual">
       <geometry>
         <mesh filename="package://mujoco_ros_sim/mujoco_menagerie/dual_fr3_husky/assets/fr3/finger.dae"/>
@@ -1178,7 +1178,7 @@
     </inertial>
   </link>
 
-  <link name="l_fr3_rightfinger">
+  <link name="fr3_l_rightfinger">
     <visual name="fr3_rightfinger_visual">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
@@ -1192,18 +1192,18 @@
     </inertial>
   </link>
 
-  <joint name="l_fr3_finger_joint1" type="fixed">
-    <parent link="l_fr3_hand"/>
-    <child link="l_fr3_leftfinger"/>
+  <joint name="fr3_l_finger_joint1" type="fixed">
+    <parent link="fr3_l_hand"/>
+    <child link="fr3_l_leftfinger"/>
     <origin rpy="0 0 0" xyz="0 0 0.0584"/>
     <!-- <axis xyz="0 1 0"/>
     <limit effort="100" lower="0.0" upper="0.04" velocity="0.2"/>
     <dynamics damping="0.3"/> -->
   </joint>
 
-  <joint name="l_fr3_finger_joint2" type="fixed">
-    <parent link="l_fr3_hand"/>
-    <child link="l_fr3_rightfinger"/>
+  <joint name="fr3_l_finger_joint2" type="fixed">
+    <parent link="fr3_l_hand"/>
+    <child link="fr3_l_rightfinger"/>
     <origin rpy="0 0 3.141592653589793" xyz="0 0 0.0584"/>
     <!-- <axis xyz="0 1 0"/>
     <limit effort="100" lower="0.0" upper="0.04" velocity="0.2"/>
