@@ -141,14 +141,9 @@ MuJoCo Model Information: fr3_husky
             MobiVec qdot_mobile_init_;
 
             //// operation space state
-            Affine3d x_;
-            Affine3d x_desired_;
-            Affine3d x_init_;
-            TaskVec xdot_;
-            TaskVec xdot_desired_;
-            TaskVec xdot_init_;
-            
+            std::string link_ee_name_;
             Affine3d x_goal_;
+            std::map<std::string, drc::TaskSpaceData> link_ee_task_;
 
             //// control input
             ManiVec torque_mani_desired_;
@@ -157,12 +152,12 @@ MuJoCo Model Information: fr3_husky
             //// gains
             ManiVec      mani_joint_kp_;
             ManiVec      mani_joint_kv_;
-            TaskVec      task_kp_;
-            TaskVec      task_kv_;
-            TaskVec      qpik_tracking_;
             AactuatorVec qpik_damping_;
-            TaskVec      qpid_tracking_;
             AactuatorVec qpid_vel_damping_;
             AactuatorVec qpid_acc_damping_;
+            std::map<std::string, Vector6d> link_task_kp_;
+            std::map<std::string, Vector6d> link_task_kv_;
+            std::map<std::string, Vector6d> link_qpik_tracking_;
+            std::map<std::string, Vector6d> link_qpid_tracking_;
     };
 } // namespace FR3Husky

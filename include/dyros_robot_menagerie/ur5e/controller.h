@@ -95,22 +95,17 @@ MuJoCo Model Information: universal_robots_ur5e
             JointVec qdot_init_;
             
             //// operation space state
-            Affine3d x_;
-            Affine3d x_desired_;
-            Affine3d x_init_;
-            TaskVec xdot_;
-            TaskVec xdot_desired_;
-            TaskVec xdot_init_;
-            
+            std::string link_ee_name_;            
             Affine3d x_goal_;
-
+            std::map<std::string, drc::TaskSpaceData> link_ee_task_;
+            
             //// control input
             JointVec q_desired_;
 
             //// gains
-            TaskVec  task_kp_;
-            TaskVec  task_kv_;
-            TaskVec  qpik_tracking_;
-            JointVec qpik_damping_;
+            JointVec qpik_damping_; 
+            std::map<std::string, Vector6d> link_task_kp_;
+            std::map<std::string, Vector6d> link_task_kv_;
+            std::map<std::string, Vector6d> link_qpik_tracking_;
     };
 } // namespace UR5e

@@ -111,14 +111,9 @@ MuJoCo Model Information: franka_fr3_torque
             JointVec qdot_init_;
             
             //// operation space state
-            Affine3d x_;
-            Affine3d x_desired_;
-            Affine3d x_init_;
-            TaskVec xdot_;
-            TaskVec xdot_desired_;
-            TaskVec xdot_init_;
-            
+            std::string link_ee_name_;            
             Affine3d x_goal_;
+            std::map<std::string, drc::TaskSpaceData> link_ee_task_;
 
             //// control input
             JointVec torque_desired_;
@@ -126,12 +121,12 @@ MuJoCo Model Information: franka_fr3_torque
             //// gains
             JointVec joint_kp_;
             JointVec joint_kv_;
-            TaskVec  task_kp_;
-            TaskVec  task_kv_;
-            TaskVec  qpik_tracking_;
-            JointVec qpik_damping_;
-            TaskVec  qpid_tracking_;
+            JointVec qpik_damping_; 
             JointVec qpid_vel_damping_;
             JointVec qpid_acc_damping_;
+            std::map<std::string, Vector6d> link_task_kp_;
+            std::map<std::string, Vector6d> link_task_kv_;
+            std::map<std::string, Vector6d> link_qpik_tracking_;
+            std::map<std::string, Vector6d> link_qpid_tracking_;
     };
 } // namespace FR3Controller

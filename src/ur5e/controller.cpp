@@ -25,14 +25,9 @@ namespace UR5e
         qdot_desired_.setZero();
         qdot_init_.setZero();
         
-        x_.setIdentity();
-        x_init_.setIdentity();
-        x_desired_.setIdentity();
-        xdot_.setZero();
-        xdot_init_.setZero();
-        xdot_desired_.setZero();
-        
         x_goal_.setIdentity();
+        link_ee_name_ = robot_data_->getEEName();
+        link_ee_task_[link_ee_name_] = drc::TaskSpaceData::Zero();
         
         q_desired_.setZero();
 
@@ -41,17 +36,18 @@ namespace UR5e
         std::vector<double> qpik_tracking_vec = node->declare_parameter<std::vector<double>>("QPIK_gains.tracking", {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
         std::vector<double> qpik_damping_vec  = node->declare_parameter<std::vector<double>>("QPIK_gains.damping",  {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
 
-        task_kp_        = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),       task_kp_vec.size());
-        task_kv_        = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),       task_kv_vec.size());
-        qpik_tracking_  = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(), qpik_tracking_vec.size());
-        qpik_damping_   = Eigen::Map<Eigen::VectorXd>(qpik_damping_vec.data(),  qpik_damping_vec.size());
+        link_task_kp_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),       task_kp_vec.size());
+        link_task_kv_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),       task_kv_vec.size());
+        link_qpik_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(), qpik_tracking_vec.size());
+        qpik_damping_                      = Eigen::Map<Eigen::VectorXd>(qpik_damping_vec.data(),  qpik_damping_vec.size());
 
-        if (task_kp_.size() != TASK_DOF || task_kv_.size() != TASK_DOF) RCLCPP_WARN(node->get_logger(), "task gains size mismatch (expected 6)");
-        if (qpik_tracking_.size() != TASK_DOF) RCLCPP_WARN(node->get_logger(), "QPIK tracking size mismatch (expected 6)");
-        if (qpik_damping_.size() != JOINT_DOF) RCLCPP_WARN(node->get_logger(), "QPIK damping size mismatch (expected 6)");
+        if (link_task_kp_[link_ee_name_].size()       != TASK_DOF)  RCLCPP_ERROR(node->get_logger(), "task_gains.kp size mismatch (expected 6)");
+        if (link_task_kv_[link_ee_name_].size()       != TASK_DOF)  RCLCPP_ERROR(node->get_logger(), "task_gains.kv size mismatch (expected 6)");
+        if (link_qpik_tracking_[link_ee_name_].size() != TASK_DOF)  RCLCPP_ERROR(node->get_logger(), "QPIK_gains.tracking size mismatch (expected 6)");
+        if (qpik_damping_.size()                      != JOINT_DOF) RCLCPP_ERROR(node->get_logger(), "QPIK_gains.damping size mismatch (expected 6)");
 
-        robot_controller_->setTaskGain(task_kp_, task_kv_);
-        robot_controller_->setQPIKGain(qpik_tracking_, qpik_damping_);
+        robot_controller_->setTaskGain(link_task_kp_, link_task_kv_);
+        robot_controller_->setQPIKGain(link_qpik_tracking_, qpik_damping_);
         
         std::ostringstream oss;
         oss << "\n=================================================================\n"
@@ -88,8 +84,8 @@ namespace UR5e
         if(!robot_data_->updateState(q_, qdot_)) RCLCPP_ERROR(node_->get_logger(), "%sFailed to update robot state.%s", cred, creset);
 
         // get ee
-        x_ = robot_data_->getPose();
-        xdot_ = robot_data_->getVelocity();
+        link_ee_task_[link_ee_name_].x    = robot_data_->getPose();
+        link_ee_task_[link_ee_name_].xdot = robot_data_->getVelocity();
     }
 
     void UR5eController::updateRGBDImage(const MujocoRosSim::ImageCVMap& images)
@@ -108,12 +104,25 @@ namespace UR5e
             q_desired_ = q_init_;
             qdot_desired_.setZero();
 
-            x_init_ = x_;
-            xdot_init_ = xdot_;
-            x_desired_ = x_init_;
-            xdot_desired_.setZero();
+            x_goal_ = link_ee_task_[link_ee_name_].x;
 
-            x_goal_ = x_init_;
+            link_ee_task_[link_ee_name_].setInit();
+            link_ee_task_[link_ee_name_].setDesired();
+            link_ee_task_[link_ee_name_].xdot.setZero();
+        }
+
+        if(mode_ == "CLIK" || mode_ == "QPIK")
+        {
+            if(is_goal_pose_changed_)
+            {
+                control_start_time_ = current_time_;
+                
+                link_ee_task_[link_ee_name_].setInit();
+                link_ee_task_[link_ee_name_].xdot.setZero();
+                link_ee_task_[link_ee_name_].x_desired = x_goal_;
+
+                is_goal_pose_changed_ = false;
+            }
         }
 
         if(mode_ == "HOME")
@@ -130,40 +139,12 @@ namespace UR5e
         }
         else if(mode_ == "CLIK")
         {
-            if(is_goal_pose_changed_)
-            {
-                control_start_time_ = current_time_;
-                x_init_ = x_;
-                xdot_init_ = xdot_;
-                is_goal_pose_changed_ = false;
-            }
-            qdot_desired_ = robot_controller_->CLIKCubic(x_goal_,
-                                                         JointVec::Zero(),
-                                                         x_init_,
-                                                         xdot_init_,
-                                                         current_time_,
-                                                         control_start_time_,
-                                                         4.0,
-                                                         robot_data_->getEEName());
+            qdot_desired_ = robot_controller_->CLIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0);
             q_desired_ += dt_ * qdot_desired_;
         }
         else if(mode_ == "QPIK")
         {
-            if(is_goal_pose_changed_)
-            {
-                control_start_time_ = current_time_;
-                x_init_ = x_;
-                xdot_init_ = xdot_;
-                is_goal_pose_changed_ = false;
-            }
-            qdot_desired_ = robot_controller_->QPIKCubic(x_goal_,
-                                                         JointVec::Zero(),
-                                                         x_init_,
-                                                         xdot_init_,
-                                                         current_time_,
-                                                         control_start_time_,
-                                                         4.0,
-                                                         robot_data_->getEEName());
+            qdot_desired_ = robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0);
             q_desired_ += dt_ * qdot_desired_;
         }
         else
@@ -228,11 +209,11 @@ namespace UR5e
         ee_pose_msg.header.frame_id = "base_link";
         ee_pose_msg.header.stamp = node_->now();
 
-        ee_pose_msg.pose.position.x = x_.translation()(0);
-        ee_pose_msg.pose.position.y = x_.translation()(1);
-        ee_pose_msg.pose.position.z = x_.translation()(2);
+        ee_pose_msg.pose.position.x = link_ee_task_[link_ee_name_].x.translation()(0);
+        ee_pose_msg.pose.position.y = link_ee_task_[link_ee_name_].x.translation()(1);
+        ee_pose_msg.pose.position.z = link_ee_task_[link_ee_name_].x.translation()(2);
 
-        Eigen::Quaterniond q(x_.rotation());
+        Eigen::Quaterniond q(link_ee_task_[link_ee_name_].x.rotation());
         ee_pose_msg.pose.orientation.x = q.x();
         ee_pose_msg.pose.orientation.y = q.y();
         ee_pose_msg.pose.orientation.z = q.z();

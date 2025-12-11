@@ -44,12 +44,9 @@ namespace FR3XLS
         qdot_mobile_.setZero();
         qdot_mobile_init_.setZero();
         
-        x_.setIdentity();
-        x_desired_.setIdentity();
-        x_init_.setIdentity();
-        xdot_.setZero();
-        xdot_desired_.setZero();
-        xdot_init_.setZero();
+        x_goal_.setIdentity();
+        link_ee_name_ = robot_data_->getEEName();
+        link_ee_task_[link_ee_name_] = drc::TaskSpaceData::Zero();
         
         x_goal_.setIdentity();
         
@@ -66,25 +63,30 @@ namespace FR3XLS
         std::vector<double> qpid_vel_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.vel_damping",     {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1});
         std::vector<double> qpid_acc_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.acc_damping",     {0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01});
         
-        mani_joint_kp_    = Eigen::Map<Eigen::VectorXd>(mani_joint_kp_vec.data(),    mani_joint_kp_vec.size());
-        mani_joint_kv_    = Eigen::Map<Eigen::VectorXd>(mani_joint_kv_vec.data(),    mani_joint_kv_vec.size());
-        task_kp_          = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),          task_kp_vec.size());
-        task_kv_          = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),          task_kv_vec.size());
-        qpik_tracking_    = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(),    qpik_tracking_vec.size());
-        qpik_damping_     = Eigen::Map<Eigen::VectorXd>(qpik_damping_vec.data(),     qpik_damping_vec.size());
-        qpid_tracking_    = Eigen::Map<Eigen::VectorXd>(qpid_tracking_vec.data(),    qpid_tracking_vec.size());
-        qpid_vel_damping_ = Eigen::Map<Eigen::VectorXd>(qpid_vel_damping_vec.data(), qpid_vel_damping_vec.size());
-        qpid_acc_damping_ = Eigen::Map<Eigen::VectorXd>(qpid_acc_damping_vec.data(), qpid_acc_damping_vec.size());
+        mani_joint_kp_                     = Eigen::Map<Eigen::VectorXd>(mani_joint_kp_vec.data(),    mani_joint_kp_vec.size());
+        mani_joint_kv_                     = Eigen::Map<Eigen::VectorXd>(mani_joint_kv_vec.data(),    mani_joint_kv_vec.size());
+        link_task_kp_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),          task_kp_vec.size());
+        link_task_kv_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),          task_kv_vec.size());
+        link_qpik_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(),    qpik_tracking_vec.size());
+        qpik_damping_                      = Eigen::Map<Eigen::VectorXd>(qpik_damping_vec.data(),     qpik_damping_vec.size());
+        link_qpid_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpid_tracking_vec.data(),    qpid_tracking_vec.size());
+        qpid_vel_damping_                  = Eigen::Map<Eigen::VectorXd>(qpid_vel_damping_vec.data(), qpid_vel_damping_vec.size());
+        qpid_acc_damping_                  = Eigen::Map<Eigen::VectorXd>(qpid_acc_damping_vec.data(), qpid_acc_damping_vec.size());
 
-        if (mani_joint_kp_.size() != MANI_DOF || mani_joint_kv_.size() != MANI_DOF)       RCLCPP_WARN(node->get_logger(), "joint gains size mismatch (expected 7)");
-        if (task_kp_.size() != TASK_DOF || task_kv_.size() != TASK_DOF)                   RCLCPP_WARN(node->get_logger(), "task gains size mismatch (expected 6)");
-        if (qpik_tracking_.size() != TASK_DOF || qpid_tracking_.size() != TASK_DOF)       RCLCPP_WARN(node->get_logger(), "QPIK/QPID tracking size mismatch (expected 6)");
-        if (qpik_damping_.size() != ACTUATOR_DOF || qpid_vel_damping_.size() != ACTUATOR_DOF || qpid_acc_damping_.size() != ACTUATOR_DOF) RCLCPP_WARN(node->get_logger(), "QPIK/QPID damping size mismatch (expected 9)");
+        if (mani_joint_kp_.size()                     != MANI_DOF)     RCLCPP_WARN(node->get_logger(), "manipulator_joint_gains.kp size mismatch (expected 7)");
+        if (mani_joint_kv_.size()                     != MANI_DOF)     RCLCPP_WARN(node->get_logger(), "manipulator_joint_gains.kv size mismatch (expected 7)");
+        if (link_task_kp_[link_ee_name_].size()       != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "task_gains.kp.size mismatch (expected 6)");
+        if (link_task_kv_[link_ee_name_].size()       != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "task_gains.kv.size mismatch (expected 6)");
+        if (link_qpik_tracking_[link_ee_name_].size() != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "QPIK_gains.tracking.size mismatch (expected 6)");
+        if (qpik_damping_.size()                      != ACTUATOR_DOF) RCLCPP_WARN(node->get_logger(), "QPIK_gains.damping size mismatch (expected 11)");
+        if (link_qpid_tracking_[link_ee_name_].size() != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "QPID_gains.tracking.size mismatch (expected 6)");
+        if (qpid_vel_damping_.size()                  != ACTUATOR_DOF) RCLCPP_WARN(node->get_logger(), "QPID_gains.vel_damping size mismatch (expected 11)");
+        if (qpid_acc_damping_.size()                  != ACTUATOR_DOF) RCLCPP_WARN(node->get_logger(), "QPID_gains.acc_damping size mismatch (expected 11)");
 
         robot_controller_->setManipulatorJointGain(mani_joint_kp_, mani_joint_kv_);
-        robot_controller_->setTaskGain(task_kp_, task_kv_);
-        robot_controller_->setQPIKGain(qpik_tracking_, qpik_damping_);
-        robot_controller_->setQPIDGain(qpid_tracking_, qpid_vel_damping_, qpid_acc_damping_);
+        robot_controller_->setTaskGain(link_task_kp_, link_task_kv_);
+        robot_controller_->setQPIKGain(link_qpik_tracking_, qpik_damping_);
+        robot_controller_->setQPIDGain(link_qpid_tracking_, qpid_vel_damping_, qpid_acc_damping_);
 
         std::ostringstream oss;
         oss << "\n=================================================================\n"
@@ -155,8 +157,8 @@ namespace FR3XLS
         }
 
         // get ee
-        x_ = robot_data_->getPose();
-        xdot_ = robot_data_->getVelocity();
+        link_ee_task_[link_ee_name_].x    = robot_data_->getPose();
+        link_ee_task_[link_ee_name_].xdot = robot_data_->getVelocity();
     }
 
     void FR3XLSController::updateRGBDImage(const MujocoRosSim::ImageCVMap& images)
@@ -190,12 +192,25 @@ namespace FR3XLS
             q_mobile_desired_ = q_mobile_init_;
             qdot_mobile_desired_.setZero();
 
-            x_init_ = x_;
-            x_desired_ = x_init_;
-            x_goal_ = x_init_;
+            x_goal_ = link_ee_task_[link_ee_name_].x;
 
-            xdot_init_ = xdot_;
-            xdot_desired_.setZero();
+            link_ee_task_[link_ee_name_].setInit();
+            link_ee_task_[link_ee_name_].setDesired();
+            link_ee_task_[link_ee_name_].xdot.setZero();
+        }
+
+        if(mode_ == "QPIK" || mode_ == "QPID")
+        {
+            if(is_goal_pose_changed_)
+            {
+                control_start_time_ = current_time_;
+                
+                link_ee_task_[link_ee_name_].setInit();
+                link_ee_task_[link_ee_name_].xdot.setZero();
+                link_ee_task_[link_ee_name_].x_desired =  x_goal_;
+
+                is_goal_pose_changed_ = false;
+            }
         }
         
         if(mode_ == "HOME")
@@ -213,65 +228,31 @@ namespace FR3XLS
         }
         else if(mode_ == "QPIK")
         {
-            if(is_goal_pose_changed_)
-            {
-                control_start_time_ = current_time_;
-                x_init_ = x_;
-                xdot_init_ = xdot_;
-                is_goal_pose_changed_ = false;
-            }
             VectorXd qdot_mobile_desired, qdot_mani_desired;
-            robot_controller_->QPIKCubic(x_goal_,
-                                         TaskVec::Zero(),
-                                         x_init_,
-                                         xdot_init_,
-                                         current_time_,
-                                         control_start_time_,
-                                         4.0,
-                                         robot_data_->getEEName(),
-                                         qdot_mobile_desired,
-                                         qdot_mani_desired);
+            robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qdot_mobile_desired, qdot_mani_desired);
             qdot_mobile_desired_ = qdot_mobile_desired;
             qdot_mani_desired_ = qdot_mani_desired;
             q_mani_desired_ += dt_ * qdot_mani_desired_;
-            torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueStep(q_mani_desired_, qdot_mani_desired_);
+            torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueStep(q_mani_desired_, qdot_mani_desired_, false);
         }
         else if(mode_ == "QPID")
         {
-            if(is_goal_pose_changed_)
-            {
-                control_start_time_ = current_time_;
-                x_init_ = x_;
-                xdot_init_ = xdot_;
-                is_goal_pose_changed_ = false;
-            }
             VectorXd qddot_mobile_desired,torque_mani_desired;
-            robot_controller_->QPIDCubic(x_goal_,
-                                         TaskVec::Zero(),
-                                         x_init_,
-                                         xdot_init_,
-                                         current_time_,
-                                         control_start_time_,
-                                         4.0,
-                                         robot_data_->getEEName(),
-                                         qddot_mobile_desired,
-                                         torque_mani_desired);
+            robot_controller_->QPIDCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qddot_mobile_desired,torque_mani_desired);
             torque_mani_desired_ = torque_mani_desired;
             qdot_mobile_desired_ += dt_ * qddot_mobile_desired;
         }
         else if(mode_ == "Gravity_compensattion_W_QPID")
         {
             VectorXd qddot_mobile_desired,torque_mani_desired;
-            robot_controller_->QPID(TaskVec::Zero(),
-                                    robot_data_->getEEName(),
-                                    qddot_mobile_desired,
-                                    torque_mani_desired);
+            link_ee_task_[link_ee_name_].xddot_desired.setZero();
+            robot_controller_->QPID(link_ee_task_, qddot_mobile_desired, torque_mani_desired);
             torque_mani_desired_ = torque_mani_desired;
             qdot_mobile_desired_ += dt_ * qddot_mobile_desired;
         }
         else if(mode_ == "Base Velocity Tracking")
         {
-            torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueStep(q_mani_init_, ManiVec::Zero());
+            torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueStep(q_mani_init_, ManiVec::Zero(), false);
             qdot_mobile_desired_ = robot_controller_->MobileVelocityCommand(base_vel_desired_);
         }
         else
@@ -377,11 +358,11 @@ namespace FR3XLS
         ee_pose_msg.header.frame_id = "world";
         ee_pose_msg.header.stamp = node_->now();
 
-        ee_pose_msg.pose.position.x = x_.translation()(0);
-        ee_pose_msg.pose.position.y = x_.translation()(1);
-        ee_pose_msg.pose.position.z = x_.translation()(2);
+        ee_pose_msg.pose.position.x = link_ee_task_[link_ee_name_].x.translation()(0);
+        ee_pose_msg.pose.position.y = link_ee_task_[link_ee_name_].x.translation()(1);
+        ee_pose_msg.pose.position.z = link_ee_task_[link_ee_name_].x.translation()(2);
 
-        Eigen::Quaterniond q(x_.rotation());
+        Eigen::Quaterniond q(link_ee_task_[link_ee_name_].x.rotation());
         ee_pose_msg.pose.orientation.x = q.x();
         ee_pose_msg.pose.orientation.y = q.y();
         ee_pose_msg.pose.orientation.z = q.z();
@@ -418,7 +399,6 @@ namespace FR3XLS
         
         current_base_vel_pub_->publish(base_vel_msg);
     }
-
 
     /* register with the global registry */
     PLUGINLIB_EXPORT_CLASS(FR3XLS::FR3XLSController, MujocoRosSim::ControllerInterface)
