@@ -140,6 +140,30 @@ install(PROGRAMS    ${PROJECT_NAME}/ur5e/ros2_qt_gui.py
         RENAME      UR5eControllerQT
 )
 
+# ===================== Dual FR3 =====================
+add_library(dual_fr3_controller_plugins SHARED
+    src/dual_fr3/controller.cpp
+    src/dual_fr3/robot_data.cpp
+)
+ament_target_dependencies(dual_fr3_controller_plugins
+    rclcpp 
+    pluginlib 
+    mujoco_ros_sim
+)
+
+target_link_libraries(dual_fr3_controller_plugins
+    dyros_robot_controller::dyros_robot_controller
+)
+
+install(TARGETS dual_fr3_controller_plugins
+        LIBRARY DESTINATION lib
+)
+
+install(PROGRAMS    ${PROJECT_NAME}/dual_fr3/ros2_qt_gui.py
+        DESTINATION lib/${PROJECT_NAME}
+        RENAME      DualFR3ControllerQT
+)
+
 # =================== FR3 Husky ===================
 add_library(fr3_husky_controller_plugins SHARED
     src/fr3_husky/controller.cpp
@@ -212,6 +236,30 @@ install(PROGRAMS    ${PROJECT_NAME}/fr3_pcv/ros2_qt_gui.py
         RENAME      FR3PCVControllerQT
 )
 # ===================================================
+
+# =================== Dual FR3 Husky ===================
+add_library(dual_fr3_husky_controller_plugins SHARED
+    src/dual_fr3_husky/controller.cpp
+    src/dual_fr3_husky/robot_data.cpp
+)
+ament_target_dependencies(dual_fr3_husky_controller_plugins
+    rclcpp 
+    pluginlib 
+    mujoco_ros_sim
+)
+
+target_link_libraries(dual_fr3_husky_controller_plugins
+    dyros_robot_controller::dyros_robot_controller
+)
+
+install(TARGETS dual_fr3_husky_controller_plugins
+        LIBRARY DESTINATION lib
+)
+
+install(PROGRAMS    ${PROJECT_NAME}/dual_fr3_husky/ros2_qt_gui.py
+        DESTINATION lib/${PROJECT_NAME}
+        RENAME      DualFR3HuskyControllerQT
+)
 
 
 

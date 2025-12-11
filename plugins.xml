@@ -30,6 +30,12 @@
            base_class_type="MujocoRosSim::ControllerInterface"/>
 </library>
 
+<library path="dual_fr3_controller_plugins">
+    <class name="dyros_robot_menagerie/DualFR3Controller"
+           type="DualFR3::DualFR3Controller"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>
+
 <!-- Mobile Manipulator -->
 <library path="fr3_husky_controller_plugins">
     <class name="dyros_robot_menagerie/FR3HuskyController"
@@ -46,5 +52,11 @@
 <library path="fr3_pcv_controller_plugins">
     <class name="dyros_robot_menagerie/FR3PCVController"
            type="FR3PCV::FR3PCVController"
+           base_class_type="MujocoRosSim::ControllerInterface"/>
+</library>
+
+<library path="dual_fr3_husky_controller_plugins">
+    <class name="dyros_robot_menagerie/DualFR3HuskyController"
+           type="DualFR3Husky::DualFR3HuskyController"
            base_class_type="MujocoRosSim::ControllerInterface"/>
 </library>
