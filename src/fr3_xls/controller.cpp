@@ -223,7 +223,8 @@ namespace FR3XLS
                                                                                      qdot_mani_init_,
                                                                                      current_time_,
                                                                                      control_start_time_,
-                                                                                     4.0);
+                                                                                     4.0,
+                                                                                     false);
             qdot_mobile_desired_.setZero();
         }
         else if(mode_ == "QPIK")

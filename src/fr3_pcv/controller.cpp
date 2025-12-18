@@ -205,19 +205,6 @@ namespace FR3PCV
             link_ee_task_[link_ee_name_].xdot.setZero();
         }
         
-        if(mode_ == "HOME")
-        {
-            ManiVec q_mani_target;
-            q_mani_target << 0, 0, 0, -M_PI/2, 0, M_PI/2, M_PI/4;
-           torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueCubic(q_mani_target,
-                                                                                     ManiVec::Zero(),
-                                                                                     q_mani_init_,
-                                                                                     qdot_mani_init_,
-                                                                                     current_time_,
-                                                                                     control_start_time_,
-                                                                                     4.0);
-            qdot_mobile_desired_.setZero();
-        }
         if(mode_ == "QPIK" || mode_ == "QPID")
         {
             if(is_goal_pose_changed_)
