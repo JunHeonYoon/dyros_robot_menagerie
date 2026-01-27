@@ -28,7 +28,7 @@ Total nv = 6
     class UR5eRobotData : public drc::Manipulator::RobotData
     {
         public:
-            UR5eRobotData(); 
+            UR5eRobotData(const double dt); 
 
             Affine3d computePose(const VectorXd& q);
             MatrixXd computeJacobian(const VectorXd& q);

@@ -5,10 +5,11 @@ namespace DualFR3
     void DualFR3Controller::configure(const rclcpp::Node::SharedPtr& node)
     {
         MujocoRosSim::ControllerInterface::configure(node);
-        dt_ = 0.001;
+        const double dt = 0.001;
 
-        robot_data_ = std::make_shared<DualFR3RobotData>();
-        robot_controller_ = std::make_unique<drc::Manipulator::RobotController>(dt_, robot_data_);
+        robot_data_ = std::make_shared<DualFR3RobotData>(dt);
+        dt_ = robot_data_->getDt();
+        robot_controller_ = std::make_unique<drc::Manipulator::RobotController>(robot_data_);
         
         key_sub_              = node_->create_subscription<std_msgs::msg::Int32>("dual_fr3_controller/mode_input", 10,std::bind(&DualFR3Controller::keyCallback, this, std::placeholders::_1));
         target_l_ee_pose_sub_ = node_->create_subscription<geometry_msgs::msg::PoseStamped>("dual_fr3_controller/target_l_ee_pose", 10,std::bind(&DualFR3Controller::subtargetLEEPoseCallback, this, std::placeholders::_1));

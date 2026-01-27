@@ -52,8 +52,9 @@ class FR3ControllerPy(ControllerInterface):
         
         self.dt = 0.001
 
-        self.robot_data       = FR3RobotData()
-        self.robot_controller = RobotController(self.dt, self.robot_data)
+        self.robot_data       = FR3RobotData(self.dt)
+        self.dt = self.robot_data.get_dt()
+        self.robot_controller = RobotController(self.robot_data)
         
         qos = QoSProfile(depth=1)
         qos.reliability = ReliabilityPolicy.BEST_EFFORT

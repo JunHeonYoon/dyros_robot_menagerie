@@ -54,8 +54,9 @@ class PCVControllerPy(ControllerInterface):
         self.dt = 0.01
 
         # robot data & controller
-        self.robot_data   = PCVRobotData()
-        self.robot_controller = RobotController(self.dt, self.robot_data)
+        self.robot_data   = PCVRobotData(self.dt)
+        self.dt = self.robot_data.get_dt()
+        self.robot_controller = RobotController(self.robot_data)
 
         # ROS 2 I/O                                                          #
         ns = "pcv_controller"

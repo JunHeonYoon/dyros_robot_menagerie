@@ -5,10 +5,11 @@ namespace FR3PCV
     void FR3PCVController::configure(const rclcpp::Node::SharedPtr& node)
     {
         MujocoRosSim::ControllerInterface::configure(node);
-        dt_ = 0.001;
+        const double dt = 0.001;
 
-        robot_data_ = std::make_shared<FR3PCVRobotData>();
-        robot_controller_ = std::make_unique<drc::MobileManipulator::RobotController>(dt_, robot_data_);
+        robot_data_ = std::make_shared<FR3PCVRobotData>(dt);
+        dt_ = robot_data_->getDt();
+        robot_controller_ = std::make_unique<drc::MobileManipulator::RobotController>(robot_data_);
         
         key_sub_             = node_->create_subscription<std_msgs::msg::Int32>("fr3_pcv_controller/mode_input", 10,std::bind(&FR3PCVController::keyCallback, this, std::placeholders::_1));
         target_ee_pose_sub_  = node_->create_subscription<geometry_msgs::msg::PoseStamped>("fr3_pcv_controller/target_ee_pose", 10,std::bind(&FR3PCVController::subtargetEEPoseCallback, this, std::placeholders::_1));

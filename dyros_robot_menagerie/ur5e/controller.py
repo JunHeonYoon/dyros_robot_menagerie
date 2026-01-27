@@ -44,8 +44,9 @@ class UR5eControllerPy(ControllerInterface):
         
         self.dt = 0.01
 
-        self.robot_data       = UR5eRobotData()
-        self.robot_controller = RobotController(self.dt, self.robot_data)
+        self.robot_data       = UR5eRobotData(self.dt)
+        self.dt = self.robot_data.get_dt()
+        self.robot_controller = RobotController(self.robot_data)
         
         ns = "ur5e_controller"
         self._key_sub = node.create_subscription(Int32, f"{ns}/mode_input", self._key_cb, 10)

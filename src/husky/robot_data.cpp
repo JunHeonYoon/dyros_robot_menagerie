@@ -13,9 +13,9 @@ namespace Husky
         return p;
     }
 
-    HuskyRobotData::HuskyRobotData()
-    : drc::Mobile::RobotData(makeParam())
+    HuskyRobotData::HuskyRobotData(const double dt)
+    : drc::Mobile::RobotData(dt, makeParam())
     {
-
+        
     }
 } // namespace Husky

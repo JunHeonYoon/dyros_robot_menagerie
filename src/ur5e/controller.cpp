@@ -5,10 +5,11 @@ namespace UR5e
     void UR5eController::configure(const rclcpp::Node::SharedPtr& node)
     {
         MujocoRosSim::ControllerInterface::configure(node);
-        dt_ = 0.01;
+        const double dt = 0.01;
 
-        robot_data_ = std::make_shared<UR5eRobotData>();
-        robot_controller_ = std::make_unique<drc::Manipulator::RobotController>(dt_, robot_data_);
+        robot_data_ = std::make_shared<UR5eRobotData>(dt);
+        dt_ = robot_data_->getDt();
+        robot_controller_ = std::make_unique<drc::Manipulator::RobotController>(robot_data_);
 
         rclcpp::QoS qos(rclcpp::KeepLast(1)); 
         qos.reliability(rclcpp::ReliabilityPolicy::BestEffort); 

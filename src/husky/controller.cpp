@@ -3,12 +3,13 @@
 namespace Husky
 {
     void HuskyController::configure(const rclcpp::Node::SharedPtr& node)
-    {
+    {                   
         MujocoRosSim::ControllerInterface::configure(node);
-        dt_ = 0.01;
-        
-        robot_data_ = std::make_shared<HuskyRobotData>();
-        robot_controller_ = std::make_unique<drc::Mobile::RobotController>(dt_, robot_data_);
+        const double dt = 0.01;
+
+        robot_data_ = std::make_shared<HuskyRobotData>(dt);
+        dt_ = robot_data_->getDt();
+        robot_controller_ = std::make_unique<drc::Mobile::RobotController>(robot_data_);
 
         key_sub_ = node_->create_subscription<std_msgs::msg::Int32>("husky_controller/mode_input", 10,std::bind(&HuskyController::keyCallback, this, std::placeholders::_1));
         target_pose_sub_ = node_->create_subscription<geometry_msgs::msg::PoseStamped>("husky_controller/target_pose", 10,std::bind(&HuskyController::subtargetPoseCallback, this, std::placeholders::_1));

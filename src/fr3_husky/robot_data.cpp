@@ -30,8 +30,9 @@ namespace FR3Husky
         return a;
     }
 
-    FR3HuskyRobotData::FR3HuskyRobotData()
+    FR3HuskyRobotData::FR3HuskyRobotData(const double dt)
     : drc::MobileManipulator::RobotData(
+        dt,
         makeMobileParam(),
         makeJointIndex(),
         makeActuatorIndex(),

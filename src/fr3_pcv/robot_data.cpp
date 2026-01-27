@@ -34,8 +34,9 @@ namespace FR3PCV
         return a;
     }
 
-    FR3PCVRobotData::FR3PCVRobotData()
+    FR3PCVRobotData::FR3PCVRobotData(const double dt)
     : drc::MobileManipulator::RobotData(
+        dt,
         makeMobileParam(),
         makeJointIndex(),
         makeActuatorIndex(),

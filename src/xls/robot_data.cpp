@@ -21,8 +21,8 @@ namespace XLS
         return p;
     }
 
-    XLSRobotData::XLSRobotData()
-    : drc::Mobile::RobotData(makeParam())
+    XLSRobotData::XLSRobotData(const double dt)
+    : drc::Mobile::RobotData(dt, makeParam())
     {
         
     }

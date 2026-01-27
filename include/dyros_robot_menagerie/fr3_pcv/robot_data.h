@@ -90,7 +90,7 @@ base2wheel_positions
     class FR3PCVRobotData : public drc::MobileManipulator::RobotData
     {
         public:
-            FR3PCVRobotData();
+            FR3PCVRobotData(const double dt);
             Affine3d computePose(const VectorXd& q_virtual,
                                  const VectorXd& q_mobile,
                                  const VectorXd& q_mani);

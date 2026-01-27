@@ -29,7 +29,7 @@ Total nv = 7
     class FR3RobotData : public drc::Manipulator::RobotData
     {
         public:
-            FR3RobotData(); 
+            FR3RobotData(const double dt); 
 
             Affine3d computePose(const VectorXd& q);
             MatrixXd computeJacobian(const VectorXd& q);

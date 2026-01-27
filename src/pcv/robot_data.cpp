@@ -17,8 +17,8 @@ namespace PCV
         return p;
     }
 
-    PCVRobotData::PCVRobotData()
-    : drc::Mobile::RobotData(makeParam())
+    PCVRobotData::PCVRobotData(const double dt)
+    : drc::Mobile::RobotData(dt, makeParam())
     {
         
     }

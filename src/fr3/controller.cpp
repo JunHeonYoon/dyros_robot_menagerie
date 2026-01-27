@@ -5,10 +5,11 @@ namespace FR3
     void FR3Controller::configure(const rclcpp::Node::SharedPtr& node)
     {
         MujocoRosSim::ControllerInterface::configure(node);
-        dt_ = 0.001;
+        const double dt = 0.001;
 
-        robot_data_ = std::make_shared<FR3RobotData>();
-        robot_controller_ = std::make_unique<drc::Manipulator::RobotController>(dt_, robot_data_);
+        robot_data_ = std::make_shared<FR3RobotData>(dt);
+        dt_ = robot_data_->getDt();
+        robot_controller_ = std::make_unique<drc::Manipulator::RobotController>(robot_data_);
 
         rclcpp::QoS qos(rclcpp::KeepLast(1)); 
         qos.reliability(rclcpp::ReliabilityPolicy::BestEffort); 

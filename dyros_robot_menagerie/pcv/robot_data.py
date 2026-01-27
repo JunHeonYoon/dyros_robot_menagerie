@@ -23,7 +23,7 @@ TASK_DOF  = 3
 WHEEL_DOF = 8
 
 class PCVRobotData(RobotData):
-    def __init__(self):
+    def __init__(self, dt: float):
         param = KinematicParam(type                 = DriveType.Caster,
                                wheel_radius         = 0.055,
                                wheel_offset         = 0.020,
@@ -34,4 +34,4 @@ class PCVRobotData(RobotData):
                                max_lin_acc          = 3,
                                max_ang_acc          = 6,
                                )
-        super().__init__(param)
+        super().__init__(dt, param)

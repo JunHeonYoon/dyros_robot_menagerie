@@ -78,7 +78,7 @@ base_width           | 1.0702
     class DualFR3HuskyRobotData : public drc::MobileManipulator::RobotData
     {
         public:
-            DualFR3HuskyRobotData();
+            DualFR3HuskyRobotData(const double dt);
             std::string getLEEName(){return ee_l_name_;}
             std::string getREEName(){return ee_r_name_;}
             std::vector<std::string> getEENameVec(){return ee_name_vec_;}

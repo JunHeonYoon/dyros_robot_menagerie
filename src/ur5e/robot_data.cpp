@@ -2,8 +2,9 @@
 
 namespace UR5e
 {
-    UR5eRobotData::UR5eRobotData()
+    UR5eRobotData::UR5eRobotData(const double dt)
     : drc::Manipulator::RobotData(
+            dt,
             ament_index_cpp::get_package_share_directory("dyros_robot_menagerie") + "/robot/ur5e.urdf",
             ament_index_cpp::get_package_share_directory("dyros_robot_menagerie") + "/robot/ur5e.srdf",
             ament_index_cpp::get_package_share_directory("mujoco_ros_sim")) 

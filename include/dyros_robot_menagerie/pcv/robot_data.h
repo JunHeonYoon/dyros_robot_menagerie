@@ -29,6 +29,6 @@ base2wheel_positions
     class PCVRobotData : public drc::Mobile::RobotData
     {
         public: 
-            PCVRobotData();
+            PCVRobotData(const double dt);
     };
 } // namespace PCV

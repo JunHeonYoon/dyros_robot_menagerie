@@ -21,6 +21,6 @@ base_width           | 1.0702
     class HuskyRobotData : public drc::Mobile::RobotData
     {
         public: 
-            HuskyRobotData();
+            HuskyRobotData(const double dt);
     };
 } // namespace Husky

@@ -23,8 +23,9 @@ TASK_DOF:  Final[int] = 6
 JOINT_DOF: Final[int] = 6
 
 class UR5eRobotData(RobotData):
-    def __init__(self) -> None:
-        super().__init__(urdf_path     = str(Path(get_package_share_directory("dyros_robot_menagerie"), "robot", "ur5e.urdf")),
+    def __init__(self, dt: float) -> None:
+        super().__init__(dt            = dt,
+                         urdf_path     = str(Path(get_package_share_directory("dyros_robot_menagerie"), "robot", "ur5e.urdf")),
                          srdf_path     = str(Path(get_package_share_directory("dyros_robot_menagerie"), "robot", "ur5e.srdf")),
                          packages_path = get_package_share_directory("mujoco_ros_sim"),
                         )

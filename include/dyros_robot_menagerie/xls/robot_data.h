@@ -44,6 +44,6 @@ base2wheel_angles (rad)
     class XLSRobotData : public drc::Mobile::RobotData
     {
         public: 
-            XLSRobotData();
+            XLSRobotData(const double dt);
     };
 } // namespace XLS

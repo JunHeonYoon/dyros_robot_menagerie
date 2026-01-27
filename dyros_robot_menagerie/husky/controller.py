@@ -52,8 +52,9 @@ class HuskyControllerPy(ControllerInterface):
         self.dt = 0.01
         
         # robot data & controller
-        self.robot_data       = HuskyRobotData()
-        self.robot_controller = RobotController(self.dt, self.robot_data)
+        self.robot_data       = HuskyRobotData(self.dt)
+        self.dt = self.robot_data.get_dt()
+        self.robot_controller = RobotController(self.robot_data)
         
         # ROS 2 I/O                                                          #
         qos = QoSProfile(depth=1)
@@ -254,4 +255,3 @@ class HuskyControllerPy(ControllerInterface):
         ros_image.header.stamp = self.node.get_clock().now().to_msg()
         ros_image.header.frame_id = 'left_view'
         self.left_image_pub.publish(ros_image)
-

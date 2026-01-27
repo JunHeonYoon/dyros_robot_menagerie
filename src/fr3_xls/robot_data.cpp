@@ -38,8 +38,9 @@ namespace FR3XLS
         return a;
     }
 
-    FR3XLSRobotData::FR3XLSRobotData()
+    FR3XLSRobotData::FR3XLSRobotData(const double dt)
     : drc::MobileManipulator::RobotData(
+        dt,
         makeMobileParam(),
         makeJointIndex(),
         makeActuatorIndex(),

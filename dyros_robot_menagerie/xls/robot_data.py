@@ -38,7 +38,7 @@ base2wheel_angles (rad)
 TASK_DOF  = 3
 WHEEL_DOF = 4
 class XLSRobotData(RobotData):
-    def __init__(self):
+    def __init__(self, dt: float):
         param = KinematicParam(type                 = DriveType.Mecanum,
                                wheel_radius         = 0.120,
                                base2wheel_positions = [np.array([0.2225, 0.2045]),
@@ -53,4 +53,4 @@ class XLSRobotData(RobotData):
                                max_lin_acc          = 3,
                                max_ang_acc          = 6,
                                )
-        super().__init__(param)
+        super().__init__(dt, param)

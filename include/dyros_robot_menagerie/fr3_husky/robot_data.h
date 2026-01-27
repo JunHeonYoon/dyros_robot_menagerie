@@ -71,7 +71,7 @@ base_width           | 1.0702
     class FR3HuskyRobotData : public drc::MobileManipulator::RobotData
     {
         public:
-            FR3HuskyRobotData();
+            FR3HuskyRobotData(const double dt);
             Affine3d computePose(const VectorXd& q_virtual,
                                  const VectorXd& q_mobile,
                                  const VectorXd& q_mani);

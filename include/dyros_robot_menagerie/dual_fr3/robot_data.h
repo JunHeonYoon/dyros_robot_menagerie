@@ -36,7 +36,7 @@ Total nv = 14
     class DualFR3RobotData : public drc::Manipulator::RobotData
     {
         public:
-            DualFR3RobotData();
+            DualFR3RobotData(const double dt);
             std::string getLEEName(){return ee_l_name_;}
             std::string getREEName(){return ee_r_name_;}
             std::vector<std::string> getEENameVec(){return ee_name_vec_;}
