@@ -23,16 +23,16 @@
         - 100.0 # x
         - 100.0 # y
         - 100.0 # z
-        - 100.0 # r
-        - 100.0 # p
-        - 100.0 # y
+        - 800.0 # r
+        - 800.0 # p
+        - 800.0 # y
       kv:
         - 20.0 # x
         - 20.0 # y
         - 20.0 # z
-        - 20.0 # r
-        - 20.0 # p
-        - 20.0 # y
+        - 57.0 # r
+        - 57.0 # p
+        - 57.0 # y
 
     QPIK_gains:
       tracking:
@@ -42,7 +42,7 @@
         - 1.0 # r
         - 1.0 # p
         - 1.0 # y
-      damping:
+      mani_damping:
         - 10.0 # joint 1
         - 10.0 # joint 2
         - 10.0 # joint 3
@@ -50,8 +50,10 @@
         - 10.0 # joint 5
         - 10.0 # joint 6
         - 10.0 # joint 7
-        - 0.2 # left wheel
-        - 0.2 # right wheel
+      base_damping:
+        - 0.2 # vx
+        - 0.2 # vy
+        - 0.2 # wz
 
     QPID_gains:
       tracking:
@@ -61,7 +63,7 @@
         - 1.0 # r
         - 1.0 # p
         - 1.0 # y
-      vel_damping:
+      mani_vel_damping:
         - 0.1 # joint 1
         - 0.1 # joint 2
         - 0.1 # joint 3
@@ -69,9 +71,7 @@
         - 0.1 # joint 5
         - 0.1 # joint 6
         - 0.1 # joint 7
-        - 10.0  # left wheel
-        - 10.0  # right wheel
-      acc_damping:
+      mani_acc_damping:
         - 0.01 # joint 1
         - 0.01 # joint 2
         - 0.01 # joint 3
@@ -79,5 +79,11 @@
         - 0.01 # joint 5
         - 0.01 # joint 6
         - 0.01 # joint 7
-        - 0.0001  # left wheel
-        - 0.0001  # right wheel
+      base_vel_damping:
+        - 1.0 # vx
+        - 1.0 # vy
+        - 1.0 # wz
+      base_acc_damping:
+        - 0.0001 # vx
+        - 0.0001 # vy
+        - 0.0001 # wz

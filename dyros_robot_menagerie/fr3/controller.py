@@ -194,15 +194,15 @@ class FR3ControllerPy(ControllerInterface):
                                                                                    self.qdot_desired)
 
             elif self.mode == "QPIK":
-                self.qdot_desired = self.robot_controller.QPIK_cubic(x_target     = self.x_goal,
-                                                                     xdot_target  = np.zeros(TASK_DOF),
-                                                                     x_init       = self.x_init,
-                                                                     xdot_init    = self.xdot_init,
-                                                                     current_time = self.current_time,
-                                                                     init_time    = self.control_start_time,
-                                                                     duration     = 4.0,
-                                                                     link_name    = self.robot_data.ee_name,
-                                                                     )
+                _, self.qdot_desired = self.robot_controller.QPIK_cubic(x_target     = self.x_goal,
+                                                                        xdot_target  = np.zeros(TASK_DOF),
+                                                                        x_init       = self.x_init,
+                                                                        xdot_init    = self.xdot_init,
+                                                                        current_time = self.current_time,
+                                                                        init_time    = self.control_start_time,
+                                                                        duration     = 4.0,
+                                                                        link_name    = self.robot_data.ee_name,
+                                                                        )
                 self.q_desired += self.dt * self.qdot_desired
                 self.torque_desired = self.robot_controller.move_joint_torque_step(self.q_desired, 
                                                                                    self.qdot_desired)
@@ -222,15 +222,15 @@ class FR3ControllerPy(ControllerInterface):
                                                                       )
 
             elif self.mode == "QPID":
-                self.torque_desired = self.robot_controller.QPID_cubic(x_target     = self.x_goal,
-                                                                      xdot_target  = np.zeros(TASK_DOF),
-                                                                      x_init       = self.x_init,
-                                                                      xdot_init    = self.xdot_init,
-                                                                      current_time = self.current_time,
-                                                                      init_time    = self.control_start_time,
-                                                                      duration     = 4.0,
-                                                                      link_name    = self.robot_data.ee_name,
-                                                                      )
+                _, self.torque_desired = self.robot_controller.QPID_cubic(x_target     = self.x_goal,
+                                                                          xdot_target  = np.zeros(TASK_DOF),
+                                                                          x_init       = self.x_init,
+                                                                          xdot_init    = self.xdot_init,
+                                                                          current_time = self.current_time,
+                                                                          init_time    = self.control_start_time,
+                                                                          duration     = 4.0,
+                                                                          link_name    = self.robot_data.ee_name,
+                                                                          )
 
         else:
             self.torque_desired = self.robot_data.get_gravity()

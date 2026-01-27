@@ -463,7 +463,7 @@ namespace DyrosMath
 		Eigen::EigenSolver<Eigen::Matrix<double, 2 * _State_Size_, 2 * _State_Size_>> ev(z);
 		//EigenVector Solver
 		//Matrix3D ones = Matrix3D::Ones(3,3);
-		//EigenSolver<Matrix3D> ev(ones);
+		//Eigen::EigenSolver<Matrix3D> ev(ones);
 		//cout << "The first eigenvector of the 3x3 matrix of ones is:" << endl << ev.eigenvectors().col(1) << endl;
 
 		for (int i = 0; i<8; i++)

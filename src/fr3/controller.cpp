@@ -173,7 +173,7 @@ namespace FR3
         }
         else if(mode_ == "QPIK")
         {
-            qdot_desired_ = robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0);
+            robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qdot_desired_);
             q_desired_ += dt_ * qdot_desired_;
             torque_desired_ = robot_controller_->moveJointTorqueStep(q_desired_, qdot_desired_, false);
         }
@@ -186,12 +186,12 @@ namespace FR3
         }
         else if(mode_ == "QPID")
         {
-            torque_desired_ = robot_controller_->QPIDCubic(link_ee_task_, current_time_, control_start_time_, 4.0);
+            robot_controller_->QPIDCubic(link_ee_task_, current_time_, control_start_time_, 4.0, torque_desired_);
         }
         else if(mode_ == "Gravity_compensattion_W_QPID")
         {
             link_ee_task_[link_ee_name_].xddot_desired.setZero();
-            torque_desired_ = robot_controller_->QPID(link_ee_task_);
+            robot_controller_->QPID(link_ee_task_, torque_desired_);
         }
         else
         {

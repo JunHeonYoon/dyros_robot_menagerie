@@ -56,36 +56,45 @@ namespace FR3PCV
         std::vector<double> mani_joint_kv_vec    = node->declare_parameter<std::vector<double>>("manipulator_joint_gains.kv", {30.0,  30.0,  30.0,  30.0,  10.0,  10.0,  5.0});
         std::vector<double> task_kp_vec          = node->declare_parameter<std::vector<double>>("task_gains.kp",              {100.0, 100.0, 100.0, 100.0, 100.0, 100.0});
         std::vector<double> task_kv_vec          = node->declare_parameter<std::vector<double>>("task_gains.kv",              {20.0,  20.0,  20.0,  20.0,  20.0,  20.0});
-        std::vector<double> qpik_tracking_vec    = node->declare_parameter<std::vector<double>>("QPIK_gains.tracking",        {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpik_damping_vec     = node->declare_parameter<std::vector<double>>("QPIK_gains.damping",         {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpid_tracking_vec    = node->declare_parameter<std::vector<double>>("QPID_gains.tracking",        {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpid_vel_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.vel_damping",     {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1});
-        std::vector<double> qpid_acc_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.acc_damping",     {0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01});
+        std::vector<double> qpik_tracking_vec        = node->declare_parameter<std::vector<double>>("QPIK_gains.tracking",          {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+        std::vector<double> qpik_mani_damping_vec    = node->declare_parameter<std::vector<double>>("QPIK_gains.mani_damping",      {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+        std::vector<double> qpik_base_damping_vec    = node->declare_parameter<std::vector<double>>("QPIK_gains.base_damping",      {0.2, 0.2, 0.2});
+        std::vector<double> qpid_tracking_vec        = node->declare_parameter<std::vector<double>>("QPID_gains.tracking",          {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+        std::vector<double> qpid_mani_vel_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.mani_vel_damping", {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1});
+        std::vector<double> qpid_mani_acc_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.mani_acc_damping", {0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01});
+        std::vector<double> qpid_base_vel_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.base_vel_damping", {0.1, 0.1, 0.1});
+        std::vector<double> qpid_base_acc_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.base_acc_damping", {0.01, 0.01, 0.01});
         
         mani_joint_kp_                     = Eigen::Map<Eigen::VectorXd>(mani_joint_kp_vec.data(),    mani_joint_kp_vec.size());
         mani_joint_kv_                     = Eigen::Map<Eigen::VectorXd>(mani_joint_kv_vec.data(),    mani_joint_kv_vec.size());
         link_task_kp_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),          task_kp_vec.size());
         link_task_kv_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),          task_kv_vec.size());
-        link_qpik_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(),    qpik_tracking_vec.size());
-        qpik_damping_                      = Eigen::Map<Eigen::VectorXd>(qpik_damping_vec.data(),     qpik_damping_vec.size());
-        link_qpid_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpid_tracking_vec.data(),    qpid_tracking_vec.size());
-        qpid_vel_damping_                  = Eigen::Map<Eigen::VectorXd>(qpid_vel_damping_vec.data(), qpid_vel_damping_vec.size());
-        qpid_acc_damping_                  = Eigen::Map<Eigen::VectorXd>(qpid_acc_damping_vec.data(), qpid_acc_damping_vec.size());
+        link_qpik_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(),        qpik_tracking_vec.size());
+        qpik_mani_damping_                 = Eigen::Map<Eigen::VectorXd>(qpik_mani_damping_vec.data(),    qpik_mani_damping_vec.size());
+        qpik_base_damping_                 = Eigen::Map<Eigen::Vector3d>(qpik_base_damping_vec.data());
+        link_qpid_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpid_tracking_vec.data(),        qpid_tracking_vec.size());
+        qpid_mani_vel_damping_             = Eigen::Map<Eigen::VectorXd>(qpid_mani_vel_damping_vec.data(), qpid_mani_vel_damping_vec.size());
+        qpid_mani_acc_damping_             = Eigen::Map<Eigen::VectorXd>(qpid_mani_acc_damping_vec.data(), qpid_mani_acc_damping_vec.size());
+        qpid_base_vel_damping_             = Eigen::Map<Eigen::Vector3d>(qpid_base_vel_damping_vec.data());
+        qpid_base_acc_damping_             = Eigen::Map<Eigen::Vector3d>(qpid_base_acc_damping_vec.data());
 
         if (mani_joint_kp_.size()                     != MANI_DOF)     RCLCPP_WARN(node->get_logger(), "manipulator_joint_gains.kp size mismatch (expected 7)");
         if (mani_joint_kv_.size()                     != MANI_DOF)     RCLCPP_WARN(node->get_logger(), "manipulator_joint_gains.kv size mismatch (expected 7)");
         if (link_task_kp_[link_ee_name_].size()       != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "task_gains.kp.size mismatch (expected 6)");
         if (link_task_kv_[link_ee_name_].size()       != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "task_gains.kv.size mismatch (expected 6)");
-        if (link_qpik_tracking_[link_ee_name_].size() != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "QPIK_gains.tracking.size mismatch (expected 6)");
-        if (qpik_damping_.size()                      != ACTUATOR_DOF) RCLCPP_WARN(node->get_logger(), "QPIK_gains.damping size mismatch (expected 15)");
-        if (link_qpid_tracking_[link_ee_name_].size() != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "QPID_gains.tracking.size mismatch (expected 6)");
-        if (qpid_vel_damping_.size()                  != ACTUATOR_DOF) RCLCPP_WARN(node->get_logger(), "QPID_gains.vel_damping size mismatch (expected 15)");
-        if (qpid_acc_damping_.size()                  != ACTUATOR_DOF) RCLCPP_WARN(node->get_logger(), "QPID_gains.acc_damping size mismatch (expected 9)");
+        if (link_qpik_tracking_[link_ee_name_].size() != TASK_DOF)    RCLCPP_WARN(node->get_logger(), "QPIK_gains.tracking.size mismatch (expected 6)");
+        if (qpik_mani_damping_vec.size()              != MANI_DOF)    RCLCPP_WARN(node->get_logger(), "QPIK_gains.mani_damping size mismatch (expected 7)");
+        if (qpik_base_damping_vec.size()              != 3)           RCLCPP_WARN(node->get_logger(), "QPIK_gains.base_damping size mismatch (expected 3)");
+        if (link_qpid_tracking_[link_ee_name_].size() != TASK_DOF)    RCLCPP_WARN(node->get_logger(), "QPID_gains.tracking.size mismatch (expected 6)");
+        if (qpid_mani_vel_damping_vec.size()          != MANI_DOF)    RCLCPP_WARN(node->get_logger(), "QPID_gains.mani_vel_damping size mismatch (expected 7)");
+        if (qpid_mani_acc_damping_vec.size()          != MANI_DOF)    RCLCPP_WARN(node->get_logger(), "QPID_gains.mani_acc_damping size mismatch (expected 7)");
+        if (qpid_base_vel_damping_vec.size()          != 3)           RCLCPP_WARN(node->get_logger(), "QPID_gains.base_vel_damping size mismatch (expected 3)");
+        if (qpid_base_acc_damping_vec.size()          != 3)           RCLCPP_WARN(node->get_logger(), "QPID_gains.base_acc_damping size mismatch (expected 3)");
 
         robot_controller_->setManipulatorJointGain(mani_joint_kp_, mani_joint_kv_);
         robot_controller_->setTaskGain(link_task_kp_, link_task_kv_);
-        robot_controller_->setQPIKGain(link_qpik_tracking_, qpik_damping_);
-        robot_controller_->setQPIDGain(link_qpid_tracking_, qpid_vel_damping_, qpid_acc_damping_);
+        robot_controller_->setQPIKGain(link_qpik_tracking_, qpik_mani_damping_, qpik_base_damping_);
+        robot_controller_->setQPIDGain(link_qpid_tracking_, qpid_mani_vel_damping_, qpid_mani_acc_damping_, qpid_base_vel_damping_, qpid_base_acc_damping_);
 
         std::ostringstream oss;
         oss << "\n=================================================================\n"
@@ -236,27 +245,51 @@ namespace FR3PCV
         }
         else if(mode_ == "QPIK")
         {
-            VectorXd qdot_mobile_desired, qdot_mani_desired;
-            robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qdot_mobile_desired, qdot_mani_desired);
-            qdot_mobile_desired_ = qdot_mobile_desired;
-            qdot_mani_desired_ = qdot_mani_desired;
-            q_mani_desired_ += dt_ * qdot_mani_desired_;
-            torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueStep(q_mani_desired_, qdot_mani_desired_, false);
+            MobiVec qdot_mobile_desired;
+            ManiVec qdot_mani_desired;
+            if(robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qdot_mobile_desired, qdot_mani_desired))
+            {
+                qdot_mobile_desired_ = qdot_mobile_desired;
+                qdot_mani_desired_ = qdot_mani_desired;
+                q_mani_desired_ += dt_ * qdot_mani_desired_;
+                torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueStep(q_mani_desired_, qdot_mani_desired_, false);
+            }
+            else
+            {
+                torque_mani_desired_ = robot_data_->getGravity().segment(robot_data_->getJointIndex().mani_start, MANI_DOF);
+                qdot_mobile_desired_.setZero();
+            }
         }
         else if(mode_ == "QPID")
         {
-            VectorXd qddot_mobile_desired,torque_mani_desired;
-            robot_controller_->QPIDCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qddot_mobile_desired,torque_mani_desired);
-            torque_mani_desired_ = torque_mani_desired;
-            qdot_mobile_desired_ += dt_ * qddot_mobile_desired;
+            MobiVec qddot_mobile_desired;
+            ManiVec torque_mani_desired;
+            if(robot_controller_->QPIDCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qddot_mobile_desired,torque_mani_desired))
+            {
+                torque_mani_desired_ = torque_mani_desired;
+                qdot_mobile_desired_ += dt_ * qddot_mobile_desired;
+            }
+            else
+            {
+                torque_mani_desired_ = robot_data_->getGravity().segment(robot_data_->getJointIndex().mani_start, MANI_DOF);
+                qdot_mobile_desired_.setZero();
+            }
         }
         else if(mode_ == "Gravity_compensattion_W_QPID")
         {
-            VectorXd qddot_mobile_desired,torque_mani_desired;
+            MobiVec qddot_mobile_desired;
+            ManiVec torque_mani_desired;
             link_ee_task_[link_ee_name_].xddot_desired.setZero();
-            robot_controller_->QPID(link_ee_task_, qddot_mobile_desired, torque_mani_desired);
-            torque_mani_desired_ = torque_mani_desired;
-            qdot_mobile_desired_ += dt_ * qddot_mobile_desired;
+            if(robot_controller_->QPID(link_ee_task_, qddot_mobile_desired, torque_mani_desired))
+            {
+                torque_mani_desired_ = torque_mani_desired;
+                qdot_mobile_desired_ += dt_ * qddot_mobile_desired;
+            }
+            else
+            {
+                torque_mani_desired_ = robot_data_->getGravity().segment(robot_data_->getJointIndex().mani_start, MANI_DOF);
+                qdot_mobile_desired_.setZero();
+            }
         }
         else if(mode_ == "Base Velocity Tracking")
         {

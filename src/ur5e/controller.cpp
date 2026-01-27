@@ -145,7 +145,7 @@ namespace UR5e
         }
         else if(mode_ == "QPIK")
         {
-            qdot_desired_ = robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0);
+            robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qdot_desired_);
             q_desired_ += dt_ * qdot_desired_;
         }
         else

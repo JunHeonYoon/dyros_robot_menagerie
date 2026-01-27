@@ -176,15 +176,15 @@ class UR5eControllerPy(ControllerInterface):
                 self.q_desired += self.dt * self.qdot_desired
 
             elif self.mode == "QPIK":
-                self.qdot_desired = self.robot_controller.QPIK_cubic(x_target     = self.x_goal,
-                                                                     xdot_target  = np.zeros(TASK_DOF),
-                                                                     x_init       = self.x_init,
-                                                                     xdot_init    = self.xdot_init,
-                                                                     current_time = self.current_time,
-                                                                     init_time    = self.control_start_time,
-                                                                     duration     = 4.0,
-                                                                     link_name    = self.robot_data.ee_name,
-                                                                     )
+                _, self.qdot_desired = self.robot_controller.QPIK_cubic(x_target     = self.x_goal,
+                                                                        xdot_target  = np.zeros(TASK_DOF),
+                                                                        x_init       = self.x_init,
+                                                                        xdot_init    = self.xdot_init,
+                                                                        current_time = self.current_time,
+                                                                        init_time    = self.control_start_time,
+                                                                        duration     = 4.0,
+                                                                        link_name    = self.robot_data.ee_name,
+                                                                        )
                 self.q_desired += self.dt * self.qdot_desired
         else:
             self.q_desired = self.q_init.copy()

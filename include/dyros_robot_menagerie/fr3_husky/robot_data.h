@@ -116,5 +116,41 @@ base_width           | 1.0702
 
         private:
             std::string ee_name_;
+
+            static std::string execAndCaptureStdout(const std::string& cmd)
+            {
+                // Run command and open a pipe to read its stdout.
+                FILE* pipe = popen(cmd.c_str(), "r");
+                if (!pipe)
+                {
+                    throw std::runtime_error("popen() failed. Is xacro in PATH?");
+                }
+
+                // Read stdout chunk-by-chunk into a string buffer.
+                std::string output;
+                std::array<char, 4096> buffer{};
+                while (true)
+                {
+                    const size_t n = std::fread(buffer.data(), 1, buffer.size(), pipe);
+                    if (n > 0)
+                    {
+                        output.append(buffer.data(), n);
+                    }
+                    if (n < buffer.size())
+                    {
+                        // Either EOF or error.
+                        break;
+                    }
+                }
+
+                // Close the pipe and check the command exit status.
+                const int rc = pclose(pipe);
+                if (rc != 0)
+                {
+                    throw std::runtime_error("Command failed (non-zero exit): " + cmd);
+                }
+
+                return output;
+    }
     };
 } // namespace FR3Husky

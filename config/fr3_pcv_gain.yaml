@@ -42,7 +42,7 @@
         - 1.0 # r
         - 1.0 # p
         - 1.0 # y
-      damping:
+      mani_damping:
         - 10.0 # joint 1
         - 10.0 # joint 2
         - 10.0 # joint 3
@@ -50,14 +50,10 @@
         - 10.0 # joint 5
         - 10.0 # joint 6
         - 10.0 # joint 7
-        - 0.2 # front left steer
-        - 0.2 # front left rotate
-        - 0.2 # front right steer
-        - 0.2 # front right rotate
-        - 0.2 # rear left steer
-        - 0.2 # rear left rotate
-        - 0.2 # rear right steer
-        - 0.2 # rear right rotate
+      base_damping:
+        - 0.2 # vx
+        - 0.2 # vy
+        - 0.2 # wz
 
     QPID_gains:
       tracking:
@@ -67,7 +63,7 @@
         - 1.0 # r
         - 1.0 # p
         - 1.0 # y
-      vel_damping:
+      mani_vel_damping:
         - 0.1 # joint 1
         - 0.1 # joint 2
         - 0.1 # joint 3
@@ -75,15 +71,7 @@
         - 0.1 # joint 5
         - 0.1 # joint 6
         - 0.1 # joint 7
-        - 10.0 # front left steer
-        - 10.0 # front left rotate
-        - 10.0 # front right steer
-        - 10.0 # front right rotate
-        - 10.0 # rear left steer
-        - 10.0 # rear left rotate
-        - 10.0 # rear right steer
-        - 10.0 # rear right rotate
-      acc_damping:
+      mani_acc_damping:
         - 0.01 # joint 1
         - 0.01 # joint 2
         - 0.01 # joint 3
@@ -91,11 +79,11 @@
         - 0.01 # joint 5
         - 0.01 # joint 6
         - 0.01 # joint 7
-        - 0.0001 # front left steer
-        - 0.0001 # front left rotate
-        - 0.0001 # front right steer
-        - 0.0001 # front right rotate
-        - 0.0001 # rear left steer
-        - 0.0001 # rear left rotate
-        - 0.0001 # rear right steer
-        - 0.0001 # rear right rotate
+      base_vel_damping:
+        - 10.0 # vx
+        - 10.0 # vy
+        - 10.0 # wz
+      base_acc_damping:
+        - 0.0001 # vx
+        - 0.0001 # vy
+        - 0.0001 # wz

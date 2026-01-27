@@ -16,8 +16,10 @@ namespace FR3XLS
                             M_PI/4,  // front_right
                             M_PI/4,  // rear_left
                            -M_PI/4}; // rear_right
-        p.max_lin_acc  = 3;
-        p.max_ang_acc  = 6;
+        p.max_lin_speed  = 1;
+        p.max_ang_speed  = 1;
+        p.max_lin_acc  = 1;
+        p.max_ang_acc  = 1;
         return p;
     }
 

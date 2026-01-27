@@ -152,9 +152,12 @@ MuJoCo Model Information: fr3_husky
             //// gains
             ManiVec      mani_joint_kp_;
             ManiVec      mani_joint_kv_;
-            AactuatorVec qpik_damping_;
-            AactuatorVec qpid_vel_damping_;
-            AactuatorVec qpid_acc_damping_;
+            ManiVec      qpik_mani_damping_;
+            Vector3d     qpik_base_damping_;
+            ManiVec      qpid_mani_vel_damping_;
+            ManiVec      qpid_mani_acc_damping_;
+            Vector3d     qpid_base_vel_damping_;
+            Vector3d     qpid_base_acc_damping_;
             std::map<std::string, Vector6d> link_task_kp_;
             std::map<std::string, Vector6d> link_task_kv_;
             std::map<std::string, Vector6d> link_qpik_tracking_;
