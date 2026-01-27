@@ -115,8 +115,8 @@ namespace DualFR3
         // get manipulator joint
         for(size_t i=0; i<int(JOINT_DOF/2); i++)
         {
-            const std::string& l_name = "fr3_l_joint" + std::to_string(i+1);
-            const std::string& r_name = "fr3_r_joint" + std::to_string(i+1);
+            const std::string& l_name = "left_fr3_joint" + std::to_string(i+1);
+            const std::string& r_name = "right_fr3_joint" + std::to_string(i+1);
             q_(i) = pos_dict.at(l_name)(0);
             qdot_(i) = vel_dict.at(l_name)(0);
             q_(i + int(JOINT_DOF/2)) = pos_dict.at(r_name)(0);
@@ -248,8 +248,8 @@ namespace DualFR3
         MujocoRosSim::CtrlInputMap ctrl_dict;
         for(size_t i=0; i<int(JOINT_DOF/2); i++)
         {
-            const std::string l_name = "fr3_l_joint" + std::to_string(i+1);
-            const std::string r_name = "fr3_r_joint" + std::to_string(i+1);
+            const std::string l_name = "left_fr3_joint" + std::to_string(i+1);
+            const std::string r_name = "right_fr3_joint" + std::to_string(i+1);
             ctrl_dict[l_name] = torque_desired_(i);
             ctrl_dict[r_name] = torque_desired_(int(JOINT_DOF/2)+i);
         }
