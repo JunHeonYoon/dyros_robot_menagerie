@@ -31,3 +31,11 @@
         - 1.0 # joint 4
         - 1.0 # joint 5
         - 1.0 # joint 6
+      # TODO: set QPIK joint acceleration damping weights (added in dyros_robot_controller)
+      acc_damping:
+        - 0.0 # joint 1
+        - 0.0 # joint 2
+        - 0.0 # joint 3
+        - 0.0 # joint 4
+        - 0.0 # joint 5
+        - 0.0 # joint 6

@@ -10,10 +10,5 @@ namespace DualFR3
             ament_index_cpp::get_package_share_directory("dyros_robot_menagerie") + "/robot/dual_fr3.srdf",
             ament_index_cpp::get_package_share_directory("mujoco_ros_sim")) 
     {
-        ee_l_name_ = "left_fr3_hand_tcp";
-        ee_r_name_ = "right_fr3_hand_tcp";
-        ee_name_vec_.resize(2);
-        ee_name_vec_[0] = ee_l_name_;
-        ee_name_vec_[1] = ee_r_name_;
     }
 } // namespace DualFR3

@@ -104,6 +104,7 @@ MuJoCo Model Information: universal_robots_ur5e
 
             //// gains
             JointVec qpik_damping_; 
+            JointVec qpik_acc_damping_;
             std::map<std::string, Vector6d> link_task_kp_;
             std::map<std::string, Vector6d> link_task_kv_;
             std::map<std::string, Vector6d> link_qpik_tracking_;

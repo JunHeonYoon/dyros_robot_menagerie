@@ -72,6 +72,7 @@ MuJoCo Model Information: franka_fr3_torque
             // ====================================================================================
             // ===================== Helper / CB / Background Thread Functions ==================== 
             // ====================================================================================
+            bool setDRCGains();
             void setMode(const std::string& mode);
             void keyCallback(const std_msgs::msg::Int32::SharedPtr);
             void subtargetPoseCallback(const geometry_msgs::msg::PoseStamped::SharedPtr);
@@ -111,7 +112,7 @@ MuJoCo Model Information: franka_fr3_torque
             JointVec qdot_init_;
             
             //// operation space state
-            std::string link_ee_name_;            
+            std::string ee_name_;            
             Affine3d x_goal_;
             std::map<std::string, drc::TaskSpaceData> link_ee_task_;
 
@@ -121,12 +122,14 @@ MuJoCo Model Information: franka_fr3_torque
             //// gains
             JointVec joint_kp_;
             JointVec joint_kv_;
-            JointVec qpik_damping_; 
+            TaskVec  task_ik_kp_;
+            TaskVec  task_id_kp_;
+            TaskVec  task_id_kv_;
+            TaskVec  qpik_tracking_;
+            JointVec qpik_vel_damping_; 
+            JointVec qpik_acc_damping_; 
+            TaskVec  qpid_tracking_;
             JointVec qpid_vel_damping_;
             JointVec qpid_acc_damping_;
-            std::map<std::string, Vector6d> link_task_kp_;
-            std::map<std::string, Vector6d> link_task_kv_;
-            std::map<std::string, Vector6d> link_qpik_tracking_;
-            std::map<std::string, Vector6d> link_qpid_tracking_;
     };
 } // namespace FR3Controller

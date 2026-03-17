@@ -90,6 +90,7 @@ MuJoCo Model Information: dual_fr3
             // ====================================================================================
             // ===================== Helper / CB / Background Thread Functions ==================== 
             // ====================================================================================
+            bool setDRCGains();
             void setMode(const std::string& mode);
             void keyCallback(const std_msgs::msg::Int32::SharedPtr);
             void subtargetLEEPoseCallback(const geometry_msgs::msg::PoseStamped::SharedPtr);
@@ -127,15 +128,14 @@ MuJoCo Model Information: dual_fr3
             JointVec qdot_init_;
 
             //// operation space state
+            std::vector<std::string> ee_names_;
+            std::map<std::string, drc::TaskSpaceData> link_ee_task_;
+            
             // left
-            std::string link_ee_name_l_;
             Affine3d x_l_goal_;
  
             // right
-            std::string link_ee_name_r_;
             Affine3d x_r_goal_;
-
-            std::map<std::string, drc::TaskSpaceData> link_ee_task_;
 
             //// control input
             JointVec torque_desired_;
@@ -143,12 +143,14 @@ MuJoCo Model Information: dual_fr3
             //// gains
             JointVec joint_kp_;
             JointVec joint_kv_;
-            JointVec qpik_damping_; 
+            TaskVec  task_ik_kp_;
+            TaskVec  task_id_kp_;
+            TaskVec  task_id_kv_;
+            TaskVec  qpik_tracking_;
+            JointVec qpik_vel_damping_; 
+            JointVec qpik_acc_damping_; 
+            TaskVec  qpid_tracking_;
             JointVec qpid_vel_damping_;
             JointVec qpid_acc_damping_;
-            std::map<std::string, Vector6d> link_task_kp_;
-            std::map<std::string, Vector6d> link_task_kv_;
-            std::map<std::string, Vector6d> link_qpik_tracking_;
-            std::map<std::string, Vector6d> link_qpid_tracking_;
     };
 } // namespace DualFR3

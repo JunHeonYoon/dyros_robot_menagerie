@@ -178,15 +178,18 @@ MuJoCo Model Information: dual_fr3_husky
             //// gains
             ManiVec      mani_joint_kp_;
             ManiVec      mani_joint_kv_;
+            Vector6d     ik_kp_;
+            Vector6d     id_kp_;
+            Vector6d     id_kv_;
+            Vector6d     qpik_tracking_;
             ManiVec      qpik_mani_damping_;
             Vector3d     qpik_base_damping_;
+            ManiVec      qpik_mani_acc_damping_;
+            Vector3d     qpik_base_acc_damping_;
+            Vector6d     qpid_tracking_;
             ManiVec      qpid_mani_vel_damping_;
             ManiVec      qpid_mani_acc_damping_;
             Vector3d     qpid_base_vel_damping_;
             Vector3d     qpid_base_acc_damping_;
-            std::map<std::string, Vector6d> link_task_kp_;
-            std::map<std::string, Vector6d> link_task_kv_;
-            std::map<std::string, Vector6d> link_qpik_tracking_;
-            std::map<std::string, Vector6d> link_qpid_tracking_;
     };
 } // namespace DualFR3Husky

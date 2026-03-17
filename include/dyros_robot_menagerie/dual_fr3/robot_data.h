@@ -37,13 +37,5 @@ Total nv = 14
     {
         public:
             DualFR3RobotData(const double dt);
-            std::string getLEEName(){return ee_l_name_;}
-            std::string getREEName(){return ee_r_name_;}
-            std::vector<std::string> getEENameVec(){return ee_name_vec_;}
-
-        private:
-            std::vector<std::string> ee_name_vec_;
-            std::string ee_l_name_;
-            std::string ee_r_name_;
     };
 } // namespace DualFR3

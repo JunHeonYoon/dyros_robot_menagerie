@@ -1,89 +1,32 @@
 /mujoco_ros_sim_node:
   ros__parameters:
-    manipulator_joint_gains:  # w.o using mass matrix
-      kp:
-        - 600.0 # joint1
-        - 600.0 # joint2
-        - 600.0 # joint3
-        - 600.0 # joint4
-        - 250.0 # joint5
-        - 150.0 # joint6
-        - 50.0  # joint7
-      kv:
-        - 30.0 # joint1
-        - 30.0 # joint2
-        - 30.0 # joint3
-        - 30.0 # joint4
-        - 10.0 # joint5
-        - 10.0 # joint6
-        - 5.0  # joint7
-
-    task_gains:
-      kp:
-        - 100.0 # x
-        - 100.0 # y
-        - 100.0 # z
-        - 800.0 # r
-        - 800.0 # p
-        - 800.0 # y
-      kv:
-        - 20.0 # x
-        - 20.0 # y
-        - 20.0 # z
-        - 57.0 # r
-        - 57.0 # p
-        - 57.0 # y
-
-    QPIK_gains:
-      tracking:
-        - 1.0 # x
-        - 1.0 # y
-        - 1.0 # z
-        - 1.0 # r
-        - 1.0 # p
-        - 1.0 # y
-      mani_damping:
-        - 10.0 # joint 1
-        - 10.0 # joint 2
-        - 10.0 # joint 3
-        - 10.0 # joint 4
-        - 10.0 # joint 5
-        - 10.0 # joint 6
-        - 10.0 # joint 7
-      base_damping:
-        - 0.2 # vx
-        - 0.2 # vy
-        - 0.2 # wz
-
-    QPID_gains:
-      tracking:
-        - 1.0 # x
-        - 1.0 # y
-        - 1.0 # z
-        - 1.0 # r
-        - 1.0 # p
-        - 1.0 # y
-      mani_vel_damping:
-        - 0.1 # joint 1
-        - 0.1 # joint 2
-        - 0.1 # joint 3
-        - 0.1 # joint 4
-        - 0.1 # joint 5
-        - 0.1 # joint 6
-        - 0.1 # joint 7
-      mani_acc_damping:
-        - 0.01 # joint 1
-        - 0.01 # joint 2
-        - 0.01 # joint 3
-        - 0.01 # joint 4
-        - 0.01 # joint 5
-        - 0.01 # joint 6
-        - 0.01 # joint 7
-      base_vel_damping:
-        - 1.0 # vx
-        - 1.0 # vy
-        - 1.0 # wz
-      base_acc_damping:
-        - 0.0001 # vx
-        - 0.0001 # vy
-        - 0.0001 # wz
+    dyros_robot_controller:
+      manipulator_joint_gains:
+        kp: [600.0, 600.0, 600.0, 600.0, 250.0, 150.0, 50.0]
+        kv: [30.0, 30.0, 30.0, 30.0, 10.0, 10.0, 5.0]
+      task_gains:
+        ik:
+          kp: [10.0, 10.0, 10.0, 30.0, 30.0, 30.0]
+        id:
+          kp: [600.0, 600.0, 600.0, 1000.0, 1000.0, 1000.0]
+          kv: [20.0, 20.0, 20.0, 30.0, 30.0, 30.0]
+      QPIK_weight:
+        tracking:
+          weights: [10.0, 10.0, 10.0, 40.0, 40.0, 40.0]
+        joint: 
+          velocity:
+            manipulator: [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01]
+            mobile: [0.1, 0.1, 0.1]
+          acceleration:
+            manipulator: [0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001]
+            mobile: [0.1, 0.1, 0.1]
+      QPID_weight:
+        tracking:
+          weights: [10.0, 10.0, 10.0, 1.0, 1.0, 1.0]
+        joint: 
+          velocity:
+            manipulator: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+            mobile: [0.1, 0.1, 0.1]
+          acceleration:
+            manipulator: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+            mobile: [0.1, 0.1, 0.1]

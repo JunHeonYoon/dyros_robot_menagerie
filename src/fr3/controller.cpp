@@ -5,10 +5,9 @@ namespace FR3
     void FR3Controller::configure(const rclcpp::Node::SharedPtr& node)
     {
         MujocoRosSim::ControllerInterface::configure(node);
-        const double dt = 0.001;
-
-        robot_data_ = std::make_shared<FR3RobotData>(dt);
-        dt_ = robot_data_->getDt();
+        
+        dt_ = 0.001;
+        robot_data_ = std::make_shared<FR3RobotData>(dt_);
         robot_controller_ = std::make_unique<drc::Manipulator::RobotController>(robot_data_);
 
         rclcpp::QoS qos(rclcpp::KeepLast(1)); 
@@ -30,48 +29,13 @@ namespace FR3
         qdot_init_.setZero();
         
         x_goal_.setIdentity();
-        link_ee_name_ = robot_data_->getEEName();
-        link_ee_task_[link_ee_name_] = drc::TaskSpaceData::Zero();
+        ee_name_ = "fr3_hand_tcp";
+        link_ee_task_[ee_name_] = drc::TaskSpaceData::Zero();
         
         torque_desired_.setZero();
 
-        std::vector<double> joint_kp_vec         = node->declare_parameter<std::vector<double>>("joint_gains.kp",         {600.0, 600.0, 600.0, 600.0, 250.0, 150.0, 50.0});
-        std::vector<double> joint_kv_vec         = node->declare_parameter<std::vector<double>>("joint_gains.kv",         {30.0,  30.0,  30.0,  30.0,  10.0,  10.0,  5.0});
-        std::vector<double> task_kp_vec          = node->declare_parameter<std::vector<double>>("task_gains.kp",          {100.0, 100.0, 100.0, 100.0, 100.0, 100.0});
-        std::vector<double> task_kv_vec          = node->declare_parameter<std::vector<double>>("task_gains.kv",          {20.0,  20.0,  20.0,  20.0,  20.0,  20.0});
-        std::vector<double> qpik_tracking_vec    = node->declare_parameter<std::vector<double>>("QPIK_gains.tracking",    {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpik_damping_vec     = node->declare_parameter<std::vector<double>>("QPIK_gains.damping",     {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpid_tracking_vec    = node->declare_parameter<std::vector<double>>("QPID_gains.tracking",    {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpid_vel_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.vel_damping", {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1});
-        std::vector<double> qpid_acc_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.acc_damping", {0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01});
+        setDRCGains();
 
-        joint_kp_                          = Eigen::Map<Eigen::VectorXd>(joint_kp_vec.data(),         joint_kp_vec.size());
-        joint_kv_                          = Eigen::Map<Eigen::VectorXd>(joint_kv_vec.data(),         joint_kv_vec.size());
-        link_task_kp_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),          task_kp_vec.size());
-        link_task_kv_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),          task_kv_vec.size());
-        link_qpik_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(),    qpik_tracking_vec.size());
-        qpik_damping_                      = Eigen::Map<Eigen::VectorXd>(qpik_damping_vec.data(),     qpik_damping_vec.size());
-        link_qpid_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpid_tracking_vec.data(),    qpid_tracking_vec.size());
-        qpid_vel_damping_                  = Eigen::Map<Eigen::VectorXd>(qpid_vel_damping_vec.data(), qpid_vel_damping_vec.size());
-        qpid_acc_damping_                  = Eigen::Map<Eigen::VectorXd>(qpid_acc_damping_vec.data(), qpid_acc_damping_vec.size());
-
-        if (joint_kp_.size()                          != JOINT_DOF) RCLCPP_ERROR(node->get_logger(), "joint_gains.kp size mismatch (expected 7)");
-        if (joint_kv_.size()                          != JOINT_DOF) RCLCPP_ERROR(node->get_logger(), "joint_gains.kv size mismatch (expected 7)");
-        if (link_task_kp_[link_ee_name_].size()       != TASK_DOF)  RCLCPP_ERROR(node->get_logger(), "task_gains.kp size mismatch (expected 6)");
-        if (link_task_kv_[link_ee_name_].size()       != TASK_DOF)  RCLCPP_ERROR(node->get_logger(), "task_gains.kv size mismatch (expected 6)");
-        if (link_qpik_tracking_[link_ee_name_].size() != TASK_DOF)  RCLCPP_ERROR(node->get_logger(), "QPIK_gains.tracking size mismatch (expected 6)");
-        if (qpik_damping_.size()                      != JOINT_DOF) RCLCPP_ERROR(node->get_logger(), "QPIK_gains.damping size mismatch (expected 7)");
-        if (link_qpid_tracking_[link_ee_name_].size() != TASK_DOF)  RCLCPP_ERROR(node->get_logger(), "QPID_gains.tracking size mismatch (expected 6)");
-        if (qpid_vel_damping_.size()                  != JOINT_DOF) RCLCPP_ERROR(node->get_logger(), "QPID_gains.vel_damping size mismatch (expected 7)");
-        if (qpid_acc_damping_.size()                  != JOINT_DOF) RCLCPP_ERROR(node->get_logger(), "QPID_gains.acc_damping size mismatch (expected 7)");
-
-
-        robot_controller_->setJointGain(joint_kp_, joint_kv_);
-        robot_controller_->setTaskGain(link_task_kp_, link_task_kv_);
-        robot_controller_->setQPIKGain(link_qpik_tracking_, qpik_damping_);
-        robot_controller_->setQPIDGain(link_qpid_tracking_, qpid_vel_damping_, qpid_acc_damping_);
-
-        
         std::ostringstream oss;
         oss << "\n=================================================================\n"
             << "=================================================================\n"
@@ -108,8 +72,8 @@ namespace FR3
         if(!robot_data_->updateState(q_, qdot_)) RCLCPP_ERROR(node_->get_logger(), "%sFailed to update robot state.%s", cred, creset);
 
         // get ee
-        link_ee_task_[link_ee_name_].x    = robot_data_->getPose();
-        link_ee_task_[link_ee_name_].xdot = robot_data_->getVelocity();
+        link_ee_task_[ee_name_].x    = robot_data_->getPose(ee_name_);
+        link_ee_task_[ee_name_].xdot = robot_data_->getVelocity(ee_name_);
     }
 
     void FR3Controller::updateRGBDImage(const MujocoRosSim::ImageCVMap& images)
@@ -125,28 +89,30 @@ namespace FR3
         {
             is_mode_changed_ = false;
             control_start_time_ = current_time_;
-
+            
             q_init_ = q_;
             qdot_init_ = qdot_;
             q_desired_ = q_init_;
             qdot_desired_.setZero();
-
-            x_goal_ = link_ee_task_[link_ee_name_].x;
-
-            link_ee_task_[link_ee_name_].setInit();
-            link_ee_task_[link_ee_name_].setDesired();
-            link_ee_task_[link_ee_name_].xdot.setZero();
+            
+            x_goal_ = link_ee_task_[ee_name_].x;
+            
+            link_ee_task_[ee_name_].setInit();
+            link_ee_task_[ee_name_].setDesired();
+            link_ee_task_[ee_name_].xdot.setZero();
+            link_ee_task_[ee_name_].control_start_time = current_time_;
         }
 
         if(mode_ == "CLIK" || mode_ == "OSF" || mode_ == "QPIK" || mode_ == "QPID")
         {
             if(is_goal_pose_changed_)
             {
+                link_ee_task_[ee_name_].control_start_time = current_time_;
                 control_start_time_ = current_time_;
                 
-                link_ee_task_[link_ee_name_].setInit();
-                link_ee_task_[link_ee_name_].xdot.setZero();
-                link_ee_task_[link_ee_name_].x_desired = x_goal_;
+                link_ee_task_[ee_name_].setInit();
+                link_ee_task_[ee_name_].xdot.setZero();
+                link_ee_task_[ee_name_].x_desired = x_goal_;
 
                 is_goal_pose_changed_ = false;
             }
@@ -167,13 +133,13 @@ namespace FR3
         }
         else if(mode_ == "CLIK")
         {
-            qdot_desired_ = robot_controller_->CLIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0);
+            if (!robot_controller_->CLIKCubic(link_ee_task_, current_time_, 4.0, qdot_desired_)) qdot_desired_.setZero();
             q_desired_ += dt_ * qdot_desired_;
             torque_desired_ = robot_controller_->moveJointTorqueStep(q_desired_, qdot_desired_, false);
         }
         else if(mode_ == "QPIK")
         {
-            robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qdot_desired_);
+            if (!robot_controller_->QPIKCubic(link_ee_task_, current_time_, 4.0, qdot_desired_)) qdot_desired_.setZero();
             q_desired_ += dt_ * qdot_desired_;
             torque_desired_ = robot_controller_->moveJointTorqueStep(q_desired_, qdot_desired_, false);
         }
@@ -181,17 +147,17 @@ namespace FR3
         {
             JointVec target_q;
             target_q << 0.0, 0.0, 0.0, -M_PI/2., 0.0, M_PI/2., M_PI / 4.;
-            VectorXd null_torque_desired = robot_controller_->moveJointTorqueStep(q_init_, JointVec::Zero());
-            torque_desired_ = robot_controller_->OSFCubic(link_ee_task_, current_time_, control_start_time_, 4.0, null_torque_desired);
+            VectorXd null_torque_desired = robot_controller_->moveJointTorqueStep(q_init_, JointVec::Zero(), false);
+            if (!robot_controller_->OSFCubic(link_ee_task_, current_time_, 4.0, torque_desired_, null_torque_desired)) torque_desired_ = robot_data_->getGravity();
         }
         else if(mode_ == "QPID")
         {
-            robot_controller_->QPIDCubic(link_ee_task_, current_time_, control_start_time_, 4.0, torque_desired_);
+            if (!robot_controller_->QPIDCubic(link_ee_task_, current_time_, 4.0, torque_desired_)) torque_desired_ = robot_data_->getGravity();
         }
         else if(mode_ == "Gravity_compensattion_W_QPID")
         {
-            link_ee_task_[link_ee_name_].xddot_desired.setZero();
-            robot_controller_->QPID(link_ee_task_, torque_desired_);
+            link_ee_task_[ee_name_].xddot_desired.setZero();
+            if (!robot_controller_->QPID(link_ee_task_, torque_desired_)) torque_desired_ = robot_data_->getGravity();
         }
         else
         {
@@ -257,11 +223,11 @@ namespace FR3
         ee_pose_msg.header.frame_id = "base_link";
         ee_pose_msg.header.stamp = node_->now();
 
-        ee_pose_msg.pose.position.x = link_ee_task_[link_ee_name_].x.translation()(0);
-        ee_pose_msg.pose.position.y = link_ee_task_[link_ee_name_].x.translation()(1);
-        ee_pose_msg.pose.position.z = link_ee_task_[link_ee_name_].x.translation()(2);
+        ee_pose_msg.pose.position.x = link_ee_task_[ee_name_].x.translation()(0);
+        ee_pose_msg.pose.position.y = link_ee_task_[ee_name_].x.translation()(1);
+        ee_pose_msg.pose.position.z = link_ee_task_[ee_name_].x.translation()(2);
 
-        Eigen::Quaterniond q(link_ee_task_[link_ee_name_].x.rotation());
+        Eigen::Quaterniond q(link_ee_task_[ee_name_].x.rotation());
         ee_pose_msg.pose.orientation.x = q.x();
         ee_pose_msg.pose.orientation.y = q.y();
         ee_pose_msg.pose.orientation.z = q.z();
@@ -288,6 +254,99 @@ namespace FR3
         depth_msg->header.frame_id = "hand_eye_cam_frame";
         hand_eye_rgb_pub_->publish(*rgb_msg);
         hand_eye_depth_pub_->publish(*depth_msg);
+    }
+
+    bool FR3Controller::setDRCGains()
+    {
+        const std::string joint = "dyros_robot_controller.manipulator_joint_gains.";
+        const std::string task  = "dyros_robot_controller.task_gains.";
+        const std::string qpik  = "dyros_robot_controller.QPIK_weight.";
+        const std::string qpid  = "dyros_robot_controller.QPID_weight.";
+
+        std::vector<double> joint_kp_vec = node_->declare_parameter<std::vector<double>>(joint + "kp", std::vector<double>(JOINT_DOF, 1.0));
+        std::vector<double> joint_kv_vec = node_->declare_parameter<std::vector<double>>(joint + "kv", std::vector<double>(JOINT_DOF, 1.0));
+
+        std::vector<double> task_ik_kp_vec = node_->declare_parameter<std::vector<double>>(task + "ik.kp", std::vector<double>(TASK_DOF, 1.0));
+        std::vector<double> task_id_kp_vec = node_->declare_parameter<std::vector<double>>(task + "id.kp", std::vector<double>(TASK_DOF, 1.0));
+        std::vector<double> task_id_kv_vec = node_->declare_parameter<std::vector<double>>(task + "id.kd", std::vector<double>(TASK_DOF, 1.0));
+
+        std::vector<double> qpik_tracking_vec    = node_->declare_parameter<std::vector<double>>(qpik + "tracking.weights",               std::vector<double>(TASK_DOF, 1.0));
+        std::vector<double> qpik_vel_damping_vec = node_->declare_parameter<std::vector<double>>(qpik + "joint.velocity.manipulator",     std::vector<double>(JOINT_DOF, 1.0));
+        std::vector<double> qpik_acc_damping_vec = node_->declare_parameter<std::vector<double>>(qpik + "joint.acceleration.manipulator", std::vector<double>(JOINT_DOF, 1.0));
+
+        std::vector<double> qpid_tracking_vec    = node_->declare_parameter<std::vector<double>>(qpid + "tracking.weights",               std::vector<double>(TASK_DOF, 1.0));
+        std::vector<double> qpid_vel_damping_vec = node_->declare_parameter<std::vector<double>>(qpid + "joint.velocity.manipulator",     std::vector<double>(JOINT_DOF, 1.0));
+        std::vector<double> qpid_acc_damping_vec = node_->declare_parameter<std::vector<double>>(qpid + "joint.acceleration.manipulator", std::vector<double>(JOINT_DOF, 1.0));
+
+        auto check_vector_size = [this](const std::string & name, size_t expected, size_t got) -> bool
+        {
+            if (got != expected)
+            {
+                RCLCPP_ERROR(node_->get_logger(), "%sParameter '%s' expected %zu values, got %zu.%s", cred, name.c_str(), expected, got, creset);
+                return false;
+            }
+            return true;
+        };
+
+        // manipulator joint gains
+        if (!check_vector_size(joint + "kp", JOINT_DOF, joint_kp_vec.size())) return false;
+        if (!check_vector_size(joint + "kv", JOINT_DOF, joint_kv_vec.size())) return false;
+
+        // task-space gains
+        if (!check_vector_size(task + "ik.kp", TASK_DOF, task_ik_kp_vec.size())) return false;
+        if (!check_vector_size(task + "id.kp", TASK_DOF, task_id_kp_vec.size())) return false;
+        if (!check_vector_size(task + "id.kd", TASK_DOF, task_id_kv_vec.size())) return false;
+
+        // QPIK weights
+        if (!check_vector_size(qpik + "tracking.weights",               TASK_DOF,  qpik_tracking_vec.size()))    return false;
+        if (!check_vector_size(qpik + "joint.velocity.manipulator",     JOINT_DOF, qpik_vel_damping_vec.size())) return false;
+        if (!check_vector_size(qpik + "joint.acceleration.manipulator", JOINT_DOF, qpik_acc_damping_vec.size())) return false;
+
+        // QPID weights
+        if (!check_vector_size(qpid + "tracking.weights",               TASK_DOF,  qpid_tracking_vec.size()))    return false;
+        if (!check_vector_size(qpid + "joint.velocity.manipulator",     JOINT_DOF, qpid_vel_damping_vec.size())) return false;
+        if (!check_vector_size(qpid + "joint.acceleration.manipulator", JOINT_DOF, qpid_acc_damping_vec.size())) return false;
+
+        joint_kp_ = Eigen::Map<const Eigen::VectorXd>(joint_kp_vec.data(), joint_kp_vec.size());
+        joint_kv_ = Eigen::Map<const Eigen::VectorXd>(joint_kv_vec.data(), joint_kv_vec.size());
+
+        task_ik_kp_ = Eigen::Map<const Eigen::VectorXd>(task_ik_kp_vec.data(), task_ik_kp_vec.size());
+        task_id_kp_ = Eigen::Map<const Eigen::VectorXd>(task_id_kp_vec.data(), task_id_kp_vec.size());
+        task_id_kv_ = Eigen::Map<const Eigen::VectorXd>(task_id_kv_vec.data(), task_id_kv_vec.size());
+
+        qpik_tracking_    = Eigen::Map<const Eigen::VectorXd>(qpik_tracking_vec.data(),    qpik_tracking_vec.size());
+        qpik_vel_damping_ = Eigen::Map<const Eigen::VectorXd>(qpik_vel_damping_vec.data(), qpik_vel_damping_vec.size());
+        qpik_acc_damping_ = Eigen::Map<const Eigen::VectorXd>(qpik_acc_damping_vec.data(), qpik_acc_damping_vec.size());
+        
+        qpid_tracking_    = Eigen::Map<const Eigen::VectorXd>(qpid_tracking_vec.data(),    qpid_tracking_vec.size());
+        qpid_vel_damping_ = Eigen::Map<const Eigen::VectorXd>(qpid_vel_damping_vec.data(), qpid_vel_damping_vec.size());
+        qpid_acc_damping_ = Eigen::Map<const Eigen::VectorXd>(qpid_acc_damping_vec.data(), qpid_acc_damping_vec.size());
+
+        std::ostringstream oss;
+        oss << "dyros robot controller gains" << "\n"
+            << "\tmanipulator_joint_gains" << "\n"
+            << "\t\tKp: " << joint_kp_.transpose() << "\n"
+            << "\t\tKv: " << joint_kv_.transpose() << "\n"
+            << "\ttask_gains" << "\n"
+            << "\t\tik.Kp: " << task_ik_kp_.transpose() << "\n"
+            << "\t\tid.Kp: " << task_id_kp_.transpose() << "\n"
+            << "\t\tid.Kv: " << task_id_kv_.transpose() << "\n"
+            << "\tQPIK_weight" << "\n"
+            << "\t\ttracking.weights: " << qpik_tracking_.transpose() << "\n"
+            << "\t\tjoint.velocity.manipulator: " << qpik_vel_damping_.transpose() << "\n"
+            << "\t\tjoint.acceleration.manipulator: " << qpik_acc_damping_.transpose() << "\n"
+            << "\tQPID_weight" << "\n"
+            << "\t\ttracking.weights: " << qpid_tracking_.transpose() << "\n"
+            << "\t\tjoint.velocity.manipulator: " << qpid_vel_damping_.transpose() << "\n"
+            << "\t\tjoint.acceleration.manipulator: " << qpid_acc_damping_.transpose();
+        RCLCPP_INFO(node_->get_logger(), "%s%s%s", cblue, oss.str().c_str(), creset);
+
+        robot_controller_->setJointGain(joint_kp_, joint_kv_);
+        robot_controller_->setIKGain(task_ik_kp_);
+        robot_controller_->setIDGain(task_id_kp_, task_id_kv_);
+        robot_controller_->setQPIKGain(qpik_tracking_, qpik_vel_damping_, qpik_acc_damping_);
+        robot_controller_->setQPIDGain(qpid_tracking_, qpid_vel_damping_, qpid_acc_damping_);
+        return true;
     }
 
     /* register with the global registry */

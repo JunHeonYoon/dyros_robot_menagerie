@@ -203,6 +203,8 @@ MuJoCo Model Information: fr3_xls
             ManiVec      mani_joint_kv_;
             ManiVec      qpik_mani_damping_;
             Vector3d     qpik_base_damping_;
+            ManiVec      qpik_mani_acc_damping_;
+            Vector3d     qpik_base_acc_damping_;
             ManiVec      qpid_mani_vel_damping_;
             ManiVec      qpid_mani_acc_damping_;
             Vector3d     qpid_base_vel_damping_;

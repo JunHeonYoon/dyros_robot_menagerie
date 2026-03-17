@@ -46,57 +46,16 @@ namespace FR3Husky
         qdot_mobile_init_.setZero();
         
         x_goal_.setIdentity();
-        link_ee_name_ = robot_data_->getEEName();
-        link_ee_task_[link_ee_name_] = drc::TaskSpaceData::Zero();
+        ee_name_ = "fr3_hand_tcp";
+        link_ee_task_[ee_name_] = drc::TaskSpaceData::Zero();
         
         torque_mani_desired_.setZero();
         qdot_mobile_desired_.setZero();
 
-        std::vector<double> mani_joint_kp_vec    = node->declare_parameter<std::vector<double>>("manipulator_joint_gains.kp", {600.0, 600.0, 600.0, 600.0, 250.0, 150.0, 50.0});
-        std::vector<double> mani_joint_kv_vec    = node->declare_parameter<std::vector<double>>("manipulator_joint_gains.kv", {30.0,  30.0,  30.0,  30.0,  10.0,  10.0,  5.0});
-        std::vector<double> task_kp_vec          = node->declare_parameter<std::vector<double>>("task_gains.kp",              {100.0, 100.0, 100.0, 100.0, 100.0, 100.0});
-        std::vector<double> task_kv_vec          = node->declare_parameter<std::vector<double>>("task_gains.kv",              {20.0,  20.0,  20.0,  20.0,  20.0,  20.0});
-        std::vector<double> qpik_tracking_vec        = node->declare_parameter<std::vector<double>>("QPIK_gains.tracking",          {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpik_mani_damping_vec    = node->declare_parameter<std::vector<double>>("QPIK_gains.mani_damping",      {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpik_base_damping_vec    = node->declare_parameter<std::vector<double>>("QPIK_gains.base_damping",      {0.2, 0.2, 0.2});
-        std::vector<double> qpid_tracking_vec        = node->declare_parameter<std::vector<double>>("QPID_gains.tracking",          {1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
-        std::vector<double> qpid_mani_vel_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.mani_vel_damping", {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1});
-        std::vector<double> qpid_mani_acc_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.mani_acc_damping", {0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01});
-        std::vector<double> qpid_base_vel_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.base_vel_damping", {0.1, 0.1, 0.1});
-        std::vector<double> qpid_base_acc_damping_vec = node->declare_parameter<std::vector<double>>("QPID_gains.base_acc_damping", {0.01, 0.01, 0.01});
-        
-        mani_joint_kp_                     = Eigen::Map<Eigen::VectorXd>(mani_joint_kp_vec.data(),    mani_joint_kp_vec.size());
-        mani_joint_kv_                     = Eigen::Map<Eigen::VectorXd>(mani_joint_kv_vec.data(),    mani_joint_kv_vec.size());
-        link_task_kp_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kp_vec.data(),          task_kp_vec.size());
-        link_task_kv_[link_ee_name_]       = Eigen::Map<Eigen::VectorXd>(task_kv_vec.data(),          task_kv_vec.size());
-        link_qpik_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpik_tracking_vec.data(),        qpik_tracking_vec.size());
-        qpik_mani_damping_                 = Eigen::Map<Eigen::VectorXd>(qpik_mani_damping_vec.data(),    qpik_mani_damping_vec.size());
-        qpik_base_damping_                 = Eigen::Map<Eigen::Vector3d>(qpik_base_damping_vec.data());
-        link_qpid_tracking_[link_ee_name_] = Eigen::Map<Eigen::VectorXd>(qpid_tracking_vec.data(),        qpid_tracking_vec.size());
-        qpid_mani_vel_damping_             = Eigen::Map<Eigen::VectorXd>(qpid_mani_vel_damping_vec.data(), qpid_mani_vel_damping_vec.size());
-        qpid_mani_acc_damping_             = Eigen::Map<Eigen::VectorXd>(qpid_mani_acc_damping_vec.data(), qpid_mani_acc_damping_vec.size());
-        qpid_base_vel_damping_             = Eigen::Map<Eigen::Vector3d>(qpid_base_vel_damping_vec.data());
-        qpid_base_acc_damping_             = Eigen::Map<Eigen::Vector3d>(qpid_base_acc_damping_vec.data());
-
-        if (mani_joint_kp_.size()                     != MANI_DOF)     RCLCPP_WARN(node->get_logger(), "manipulator_joint_gains.kp size mismatch (expected 7)");
-        if (mani_joint_kv_.size()                     != MANI_DOF)     RCLCPP_WARN(node->get_logger(), "manipulator_joint_gains.kv size mismatch (expected 7)");
-        if (link_task_kp_[link_ee_name_].size()       != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "task_gains.kp.size mismatch (expected 6)");
-        if (link_task_kv_[link_ee_name_].size()       != TASK_DOF)     RCLCPP_WARN(node->get_logger(), "task_gains.kv.size mismatch (expected 6)");
-        if (link_qpik_tracking_[link_ee_name_].size() != TASK_DOF)    RCLCPP_WARN(node->get_logger(), "QPIK_gains.tracking.size mismatch (expected 6)");
-        if (qpik_mani_damping_vec.size()              != MANI_DOF)    RCLCPP_WARN(node->get_logger(), "QPIK_gains.mani_damping size mismatch (expected 7)");
-        if (qpik_base_damping_vec.size()              != 3)           RCLCPP_WARN(node->get_logger(), "QPIK_gains.base_damping size mismatch (expected 3)");
-        if (link_qpid_tracking_[link_ee_name_].size() != TASK_DOF)    RCLCPP_WARN(node->get_logger(), "QPID_gains.tracking.size mismatch (expected 6)");
-        if (qpid_mani_vel_damping_vec.size()          != MANI_DOF)    RCLCPP_WARN(node->get_logger(), "QPID_gains.mani_vel_damping size mismatch (expected 7)");
-        if (qpid_mani_acc_damping_vec.size()          != MANI_DOF)    RCLCPP_WARN(node->get_logger(), "QPID_gains.mani_acc_damping size mismatch (expected 7)");
-        if (qpid_base_vel_damping_vec.size()          != 3)           RCLCPP_WARN(node->get_logger(), "QPID_gains.base_vel_damping size mismatch (expected 3)");
-        if (qpid_base_acc_damping_vec.size()          != 3)           RCLCPP_WARN(node->get_logger(), "QPID_gains.base_acc_damping size mismatch (expected 3)");
-
-        robot_controller_->setManipulatorJointGain(mani_joint_kp_, mani_joint_kv_);
-        robot_controller_->setTaskGain(link_task_kp_, link_task_kv_);
-        robot_controller_->setQPIKGain(link_qpik_tracking_, qpik_mani_damping_, qpik_base_damping_);
-        robot_controller_->setQPIDGain(link_qpid_tracking_, qpid_mani_vel_damping_, qpid_mani_acc_damping_, qpid_base_vel_damping_, qpid_base_acc_damping_);
+        setDRCGains();
 
         std::ostringstream oss;
+        oss.clear();
         oss << "\n=================================================================\n"
             << "=================================================================\n"
             << "URDF Joint Information: FR3Husky\n"
@@ -110,8 +69,8 @@ namespace FR3Husky
     void FR3HuskyController::starting()
     {
         current_ee_pose_pub_timer_   = node_->create_wall_timer(std::chrono::milliseconds(50),  std::bind(&FR3HuskyController::pubEEPoseCallback, this));
-        current_base_pose_pub_timer_ = node_->create_wall_timer(std::chrono::milliseconds(100), std::bind(&FR3HuskyController::pubBasePoseCallback, this));
-        current_base_vel_pub_timer_  = node_->create_wall_timer(std::chrono::milliseconds(100), std::bind(&FR3HuskyController::pubBaseVelCallback, this));
+        current_base_pose_pub_timer_ = node_->create_wall_timer(std::chrono::milliseconds(50), std::bind(&FR3HuskyController::pubBasePoseCallback, this));
+        current_base_vel_pub_timer_  = node_->create_wall_timer(std::chrono::milliseconds(50), std::bind(&FR3HuskyController::pubBaseVelCallback, this));
     }
 
     void FR3HuskyController::updateState(const MujocoRosSim::VecMap& pos_dict, 
@@ -121,31 +80,6 @@ namespace FR3Husky
                                          double current_time)
     {
         current_time_ = current_time;
-        
-        // get virtual joint
-        const Affine2d base_pose = robot_data_->getBasePose();
-        const Vector3d base_vel = robot_data_->getBaseVel();
-        q_virtual_.head(2) = base_pose.translation();
-        q_virtual_(2) = Eigen::Rotation2Dd(base_pose.linear()).angle();
-        qdot_virtual_ = base_vel;
-        // q_virtual_.head(2) = sensors_dict.at("position_sensor").head(2);
-        // Quaterniond quat(sensors_dict.at("orientation_sensor")(0),
-        //                  sensors_dict.at("orientation_sensor")(1),
-        //                  sensors_dict.at("orientation_sensor")(2),
-        //                  sensors_dict.at("orientation_sensor")(3));
-        // Vector3d euler_rpy = DyrosMath::rot2Euler(quat.toRotationMatrix());
-        // q_virtual_(2) = euler_rpy(2);
-
-        // qdot_virtual_.head(2) = sensors_dict.at("linear_velocity_sensor").head(2);
-        // qdot_virtual_(2) = sensors_dict.at("angular_velocity_sensor")(2);
-
-        
-        // get mobile base velocity
-        Matrix2d rot_base2world;
-        rot_base2world << cos(q_virtual_(2)), sin(q_virtual_(2)),
-                         -sin(q_virtual_(2)), cos(q_virtual_(2));
-        base_vel_.head(2) = rot_base2world * qdot_virtual_.head(2);
-        base_vel_(2) = qdot_virtual_(2);
 
         // get manipulator joint
         for(size_t i=0; i<MANI_DOF; i++)
@@ -161,14 +95,27 @@ namespace FR3Husky
         qdot_mobile_(0) = vel_dict.at("front_left_wheel")(0);
         qdot_mobile_(1) = vel_dict.at("front_right_wheel")(0);
 
+        // get virtual joint
+        // using odometry for getting virtual joint (you can use SLAM instead)
+        const Eigen::Affine2d base_pose_w = robot_data_->computeBasePose(q_mobile_, qdot_mobile_);
+        q_virtual_ << base_pose_w.translation()(0), 
+                      base_pose_w.translation()(1),
+                      Eigen::Rotation2Dd(base_pose_w.linear()).angle();
+        base_vel_  = robot_data_->computeBaseVel(q_mobile_, qdot_mobile_);
+        qdot_virtual_.head(2) = base_pose_w.linear() * base_vel_.head(2);
+        qdot_virtual_(2) = base_vel_(2);
+
         if(!robot_data_->updateState(q_virtual_, q_mobile_, q_mani_, qdot_virtual_, qdot_mobile_, qdot_mani_))
         {
             RCLCPP_ERROR(node_->get_logger(), "%sFailed to update robot state.%s", cred, creset);
         }
 
-        // get ee
-        link_ee_task_[link_ee_name_].x    = robot_data_->getPose();
-        link_ee_task_[link_ee_name_].xdot = robot_data_->getVelocity();
+        // get task link states
+        for (auto& [link_name, task] : link_ee_task_)
+        {
+            task.x = robot_data_->getPose(link_name);
+            task.xdot = robot_data_->getVelocity(link_name);
+        }
     }
 
     void FR3HuskyController::updateRGBDImage(const MujocoRosSim::ImageCVMap& images)
@@ -202,22 +149,27 @@ namespace FR3Husky
             q_mobile_desired_ = q_mobile_init_;
             qdot_mobile_desired_.setZero();
 
-            x_goal_ = link_ee_task_[link_ee_name_].x;
+            x_goal_ = link_ee_task_[ee_name_].x;
 
-            link_ee_task_[link_ee_name_].setInit();
-            link_ee_task_[link_ee_name_].setDesired();
-            link_ee_task_[link_ee_name_].xdot.setZero();
+            for (auto& [link_name, task] : link_ee_task_)
+            {
+                task.setInit();
+                task.xdot.setZero();
+                task.setDesired();
+                task.control_start_time = current_time_;
+            }
         }
 
-        if(mode_ == "QPIK" || mode_ == "QPID")
+        if(mode_ == "CLIK" || mode_ == "QPIK" || mode_ == "OSF" || mode_ == "QPID")
         {
             if(is_goal_pose_changed_)
             {
                 control_start_time_ = current_time_;
                 
-                link_ee_task_[link_ee_name_].setInit();
-                link_ee_task_[link_ee_name_].xdot.setZero();
-                link_ee_task_[link_ee_name_].x_desired =  x_goal_;
+                link_ee_task_[ee_name_].setInit();
+                link_ee_task_[ee_name_].xdot.setZero();
+                link_ee_task_[ee_name_].x_desired =  x_goal_;
+                link_ee_task_[ee_name_].control_start_time = current_time_;
 
                 is_goal_pose_changed_ = false;
             }
@@ -237,11 +189,11 @@ namespace FR3Husky
                                                                                       false);
             qdot_mobile_desired_.setZero();
         }
-        else if(mode_ == "QPIK")
+        else if(mode_ == "CLIK")
         {
             MobiVec qdot_mobile_desired;
             ManiVec qdot_mani_desired;
-            if(robot_controller_->QPIKCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qdot_mobile_desired, qdot_mani_desired))
+            if(robot_controller_->CLIKCubic(link_ee_task_, current_time_, 4.0, qdot_mobile_desired, qdot_mani_desired))
             {
                 qdot_mobile_desired_ = qdot_mobile_desired;
                 qdot_mani_desired_ = qdot_mani_desired;
@@ -254,11 +206,51 @@ namespace FR3Husky
                 qdot_mobile_desired_.setZero();
             }
         }
+        else if(mode_ == "QPIK")
+        {
+            MobiVec qdot_mobile_desired;
+            ManiVec qdot_mani_desired;
+            if(robot_controller_->QPIKCubic(link_ee_task_, current_time_, 4.0, qdot_mobile_desired, qdot_mani_desired))
+            {
+                qdot_mobile_desired_ = qdot_mobile_desired;
+                qdot_mani_desired_ = qdot_mani_desired;
+                q_mani_desired_ += dt_ * qdot_mani_desired_;
+                torque_mani_desired_ = robot_controller_->moveManipulatorJointTorqueStep(q_mani_desired_, qdot_mani_desired_, false);
+            }
+            else
+            {
+                torque_mani_desired_ = robot_data_->getGravity().segment(robot_data_->getJointIndex().mani_start, MANI_DOF);
+                qdot_mobile_desired_.setZero();
+            }
+        }
+        else if(mode_ == "OSF")
+        {
+            MobiVec qddot_mobile_desired;
+            ManiVec torque_mani_desired;
+
+            ManiVec target_q;
+            target_q << 0.0, 0.0, 0.0, -M_PI/2., 0.0, M_PI/2., M_PI / 4.;
+            AactuatorVec null_torque_desired;
+            null_torque_desired.setZero();
+            null_torque_desired.segment(robot_data_->getActuatorIndex().mani_start, MANI_DOF) =
+                robot_controller_->moveManipulatorJointTorqueStep(target_q, ManiVec::Zero(), false);
+            
+            if(robot_controller_->OSFCubic(link_ee_task_, current_time_, 4.0, qddot_mobile_desired, torque_mani_desired, null_torque_desired))
+            {
+                torque_mani_desired_ = torque_mani_desired;
+                qdot_mobile_desired_ += dt_ * qddot_mobile_desired;
+            }
+            else
+            {
+                torque_mani_desired_ = robot_data_->getGravity().segment(robot_data_->getJointIndex().mani_start, MANI_DOF);
+                qdot_mobile_desired_.setZero();
+            }
+        }
         else if(mode_ == "QPID")
         {
             MobiVec qddot_mobile_desired;
             ManiVec torque_mani_desired;
-            if(robot_controller_->QPIDCubic(link_ee_task_, current_time_, control_start_time_, 4.0, qddot_mobile_desired,torque_mani_desired))
+            if(robot_controller_->QPIDCubic(link_ee_task_, current_time_, 4.0, qddot_mobile_desired,torque_mani_desired, false))
             {
                 torque_mani_desired_ = torque_mani_desired;
                 qdot_mobile_desired_ += dt_ * qddot_mobile_desired;
@@ -273,7 +265,8 @@ namespace FR3Husky
         {
             MobiVec qddot_mobile_desired;
             ManiVec torque_mani_desired;
-            link_ee_task_[link_ee_name_].xddot_desired.setZero();
+            link_ee_task_[ee_name_].xddot_desired.setZero();
+
             if(robot_controller_->QPID(link_ee_task_, qddot_mobile_desired, torque_mani_desired))
             {
                 torque_mani_desired_ = torque_mani_desired;
@@ -322,10 +315,12 @@ namespace FR3Husky
     {
         RCLCPP_INFO(node_->get_logger(), "Key input received: %d", msg->data);
         if(msg->data == 1)      setMode("HOME");
-        else if(msg->data == 2) setMode("QPIK");
-        else if(msg->data == 3) setMode("QPID");
-        else if(msg->data == 4) setMode("Gravity_compensattion_W_QPID");
-        else if(msg->data == 5) setMode("Base Velocity Tracking");
+        else if(msg->data == 2) setMode("CLIK");
+        else if(msg->data == 3) setMode("QPIK");
+        else if(msg->data == 4) setMode("OSF");
+        else if(msg->data == 5) setMode("QPID");
+        else if(msg->data == 6) setMode("Gravity_compensattion_W_QPID");
+        else if(msg->data == 7) setMode("Base Velocity Tracking");
         else                    setMode("NONE");
     }
 
@@ -361,6 +356,10 @@ namespace FR3Husky
 
         base_vel_desired_.head(2) << msg->linear.x, msg->linear.y;
         base_vel_desired_(2) = msg->angular.z;
+
+        auto& ee_task = link_ee_task_[ee_name_];
+        ee_task.xdot_desired.head<3>() << msg->linear.x, msg->linear.y, msg->linear.z;
+        // ee_task.xdot_desired.tail<3>() << msg->angular.x, msg->angular.y, msg->angular.z;
     }
 
     void FR3HuskyController::subJointStatesCallback(const sensor_msgs::msg::JointState::SharedPtr msg)
@@ -391,11 +390,11 @@ namespace FR3Husky
         ee_pose_msg.header.frame_id = "world";
         ee_pose_msg.header.stamp = node_->now();
 
-        ee_pose_msg.pose.position.x = link_ee_task_[link_ee_name_].x.translation()(0);
-        ee_pose_msg.pose.position.y = link_ee_task_[link_ee_name_].x.translation()(1);
-        ee_pose_msg.pose.position.z = link_ee_task_[link_ee_name_].x.translation()(2);
+        ee_pose_msg.pose.position.x = link_ee_task_[ee_name_].x.translation()(0);
+        ee_pose_msg.pose.position.y = link_ee_task_[ee_name_].x.translation()(1);
+        ee_pose_msg.pose.position.z = link_ee_task_[ee_name_].x.translation()(2);
 
-        Eigen::Quaterniond q(link_ee_task_[link_ee_name_].x.rotation());
+        Eigen::Quaterniond q(link_ee_task_[ee_name_].x.rotation());
         ee_pose_msg.pose.orientation.x = q.x();
         ee_pose_msg.pose.orientation.y = q.y();
         ee_pose_msg.pose.orientation.z = q.z();
@@ -433,6 +432,114 @@ namespace FR3Husky
         current_base_vel_pub_->publish(base_vel_msg);
     }
 
+    bool FR3HuskyController::setDRCGains()
+    {
+        const std::string joint = "dyros_robot_controller.manipulator_joint_gains.";
+        const std::string task  = "dyros_robot_controller.task_gains.";
+        const std::string qpik  = "dyros_robot_controller.QPIK_weight.";
+        const std::string qpid  = "dyros_robot_controller.QPID_weight.";
+
+        std::vector<double> joint_kp_vec = node_->declare_parameter<std::vector<double>>(joint + "kp", std::vector<double>(MANI_DOF, 1.0));
+        std::vector<double> joint_kv_vec = node_->declare_parameter<std::vector<double>>(joint + "kv", std::vector<double>(MANI_DOF, 1.0));
+
+        std::vector<double> task_ik_kp_vec = node_->declare_parameter<std::vector<double>>(task + "ik.kp", std::vector<double>(TASK_DOF, 1.0));
+        std::vector<double> task_id_kp_vec = node_->declare_parameter<std::vector<double>>(task + "id.kp", std::vector<double>(TASK_DOF, 1.0));
+        std::vector<double> task_id_kv_vec = node_->declare_parameter<std::vector<double>>(task + "id.kd", std::vector<double>(TASK_DOF, 1.0));
+
+        std::vector<double> qpik_tracking_vec         = node_->declare_parameter<std::vector<double>>(qpik + "tracking.weights",               std::vector<double>(TASK_DOF, 1.0));
+        std::vector<double> qpik_mani_vel_damping_vec = node_->declare_parameter<std::vector<double>>(qpik + "joint.velocity.manipulator",     std::vector<double>(MANI_DOF, 1.0));
+        std::vector<double> qpik_mani_acc_damping_vec = node_->declare_parameter<std::vector<double>>(qpik + "joint.acceleration.manipulator", std::vector<double>(MANI_DOF, 1.0));
+        std::vector<double> qpik_mobi_vel_damping_vec = node_->declare_parameter<std::vector<double>>(qpik + "joint.velocity.mobile",          std::vector<double>(VIRTUAL_DOF, 1.0));
+        std::vector<double> qpik_mobi_acc_damping_vec = node_->declare_parameter<std::vector<double>>(qpik + "joint.acceleration.mobile",      std::vector<double>(VIRTUAL_DOF, 1.0));
+
+        std::vector<double> qpid_tracking_vec         = node_->declare_parameter<std::vector<double>>(qpid + "tracking.weights",               std::vector<double>(TASK_DOF, 1.0));
+        std::vector<double> qpid_mani_vel_damping_vec = node_->declare_parameter<std::vector<double>>(qpid + "joint.velocity.manipulator",     std::vector<double>(MANI_DOF, 1.0));
+        std::vector<double> qpid_mani_acc_damping_vec = node_->declare_parameter<std::vector<double>>(qpid + "joint.acceleration.manipulator", std::vector<double>(MANI_DOF, 1.0));
+        std::vector<double> qpid_mobi_vel_damping_vec = node_->declare_parameter<std::vector<double>>(qpid + "joint.velocity.mobile",          std::vector<double>(VIRTUAL_DOF, 1.0));
+        std::vector<double> qpid_mobi_acc_damping_vec = node_->declare_parameter<std::vector<double>>(qpid + "joint.acceleration.mobile",      std::vector<double>(VIRTUAL_DOF, 1.0));
+
+        auto check_vector_size = [this](const std::string & name, size_t expected, size_t got) -> bool
+        {
+            if (got != expected)
+            {
+                RCLCPP_ERROR(node_->get_logger(), "%sParameter '%s' expected %zu values, got %zu.%s", cred, name.c_str(), expected, got, creset);
+                return false;
+            }
+            return true;
+        };
+
+        // manipulator joint gains
+        if (!check_vector_size(joint + "kp", MANI_DOF, joint_kp_vec.size())) return false;
+        if (!check_vector_size(joint + "kv", MANI_DOF, joint_kv_vec.size())) return false;
+
+        // task-space gains
+        if (!check_vector_size(task + "ik.kp", TASK_DOF, task_ik_kp_vec.size())) return false;
+        if (!check_vector_size(task + "id.kp", TASK_DOF, task_id_kp_vec.size())) return false;
+        if (!check_vector_size(task + "id.kd", TASK_DOF, task_id_kv_vec.size())) return false;
+
+        // QPIK weights
+        if (!check_vector_size(qpik + "tracking.weights",               TASK_DOF,    qpik_tracking_vec.size()))         return false;
+        if (!check_vector_size(qpik + "joint.velocity.manipulator",     MANI_DOF,    qpik_mani_vel_damping_vec.size())) return false;
+        if (!check_vector_size(qpik + "joint.acceleration.manipulator", MANI_DOF,    qpik_mani_acc_damping_vec.size())) return false;
+        if (!check_vector_size(qpik + "joint.velocity.mobile",          VIRTUAL_DOF, qpik_mobi_vel_damping_vec.size())) return false;
+        if (!check_vector_size(qpik + "joint.acceleration.mobile",      VIRTUAL_DOF, qpik_mobi_acc_damping_vec.size())) return false;
+
+        // QPID weights
+        if (!check_vector_size(qpid + "tracking.weights",               TASK_DOF,    qpid_tracking_vec.size()))         return false;
+        if (!check_vector_size(qpid + "joint.velocity.manipulator",     MANI_DOF,    qpid_mani_vel_damping_vec.size())) return false;
+        if (!check_vector_size(qpid + "joint.acceleration.manipulator", MANI_DOF,    qpid_mani_acc_damping_vec.size())) return false;
+        if (!check_vector_size(qpid + "joint.velocity.mobile",          VIRTUAL_DOF, qpid_mobi_vel_damping_vec.size())) return false;
+        if (!check_vector_size(qpid + "joint.acceleration.mobile",      VIRTUAL_DOF, qpid_mobi_acc_damping_vec.size())) return false;
+
+        joint_kp_ = Eigen::Map<const Eigen::VectorXd>(joint_kp_vec.data(), joint_kp_vec.size());
+        joint_kv_ = Eigen::Map<const Eigen::VectorXd>(joint_kv_vec.data(), joint_kv_vec.size());
+
+        task_ik_kp_ = Eigen::Map<const Eigen::VectorXd>(task_ik_kp_vec.data(), task_ik_kp_vec.size());
+        task_id_kp_ = Eigen::Map<const Eigen::VectorXd>(task_id_kp_vec.data(), task_id_kp_vec.size());
+        task_id_kv_ = Eigen::Map<const Eigen::VectorXd>(task_id_kv_vec.data(), task_id_kv_vec.size());
+ 
+        qpik_tracking_         = Eigen::Map<const Eigen::VectorXd>(qpik_tracking_vec.data(),         qpik_tracking_vec.size());
+        qpik_mani_vel_damping_ = Eigen::Map<const Eigen::VectorXd>(qpik_mani_vel_damping_vec.data(), qpik_mani_vel_damping_vec.size());
+        qpik_mani_acc_damping_ = Eigen::Map<const Eigen::VectorXd>(qpik_mani_acc_damping_vec.data(), qpik_mani_acc_damping_vec.size());
+        qpik_mobi_vel_damping_ = Eigen::Map<const Eigen::VectorXd>(qpik_mobi_vel_damping_vec.data(), qpik_mobi_vel_damping_vec.size());
+        qpik_mobi_acc_damping_ = Eigen::Map<const Eigen::VectorXd>(qpik_mobi_acc_damping_vec.data(), qpik_mobi_acc_damping_vec.size());
+        
+        qpid_tracking_        = Eigen::Map<const Eigen::VectorXd>(qpid_tracking_vec.data(),          qpid_tracking_vec.size());
+        qpid_mani_vel_damping_ = Eigen::Map<const Eigen::VectorXd>(qpid_mani_vel_damping_vec.data(), qpid_mani_vel_damping_vec.size());
+        qpid_mani_acc_damping_ = Eigen::Map<const Eigen::VectorXd>(qpid_mani_acc_damping_vec.data(), qpid_mani_acc_damping_vec.size());
+        qpid_mobi_vel_damping_ = Eigen::Map<const Eigen::VectorXd>(qpid_mobi_vel_damping_vec.data(), qpid_mobi_vel_damping_vec.size());
+        qpid_mobi_acc_damping_ = Eigen::Map<const Eigen::VectorXd>(qpid_mobi_acc_damping_vec.data(), qpid_mobi_acc_damping_vec.size());
+
+        std::ostringstream oss;
+        oss << "dyros robot controller gains" << "\n"
+            << "\tmanipulator_joint_gains" << "\n"
+            << "\t\tKp: " << joint_kp_.transpose() << "\n"
+            << "\t\tKv: " << joint_kv_.transpose() << "\n"
+            << "\ttask_gains" << "\n"
+            << "\t\tik.Kp: " << task_ik_kp_.transpose() << "\n"
+            << "\t\tid.Kp: " << task_id_kp_.transpose() << "\n"
+            << "\t\tid.Kv: " << task_id_kv_.transpose() << "\n"
+            << "\tQPIK_weight" << "\n"
+            << "\t\ttracking.weights: " << qpik_tracking_.transpose() << "\n"
+            << "\t\tjoint.velocity.manipulator: " << qpik_mani_vel_damping_.transpose() << "\n"
+            << "\t\tjoint.acceleration.manipulator: " << qpik_mani_acc_damping_.transpose() << "\n"
+            << "\t\tjoint.velocity.mobile: " << qpik_mobi_vel_damping_.transpose() << "\n"
+            << "\t\tjoint.acceleration.mobile: " << qpik_mobi_acc_damping_.transpose() << "\n"
+            << "\tQPID_weight" << "\n"
+            << "\t\ttracking.weights: " << qpid_tracking_.transpose() << "\n"
+            << "\t\tjoint.velocity.manipulator: " << qpid_mani_vel_damping_.transpose() << "\n"
+            << "\t\tjoint.acceleration.manipulator: " << qpid_mani_acc_damping_.transpose() << "\n"
+            << "\t\tjoint.velocity.mobile: " << qpid_mobi_vel_damping_.transpose() << "\n"
+            << "\t\tjoint.acceleration.mobile: " << qpid_mobi_acc_damping_.transpose();
+        RCLCPP_INFO(node_->get_logger(), "%s%s%s", cblue, oss.str().c_str(), creset);
+
+        robot_controller_->setManipulatorJointGain(joint_kp_, joint_kv_);
+        robot_controller_->setIKGain(task_ik_kp_);
+        robot_controller_->setIDGain(task_id_kp_, task_id_kv_);
+        robot_controller_->setQPIKGain(qpik_tracking_, qpik_mani_vel_damping_, qpik_mani_acc_damping_, qpik_mobi_vel_damping_, qpik_mobi_acc_damping_);
+        robot_controller_->setQPIDGain(qpid_tracking_, qpid_mani_vel_damping_, qpid_mani_acc_damping_, qpid_mobi_vel_damping_, qpid_mobi_acc_damping_);
+        return true;
+    }
 
     /* register with the global registry */
     PLUGINLIB_EXPORT_CLASS(FR3Husky::FR3HuskyController, MujocoRosSim::ControllerInterface)

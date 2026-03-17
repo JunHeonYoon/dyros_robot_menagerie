@@ -30,21 +30,5 @@ Total nv = 7
     {
         public:
             FR3RobotData(const double dt); 
-
-            Affine3d computePose(const VectorXd& q);
-            MatrixXd computeJacobian(const VectorXd& q);
-            MatrixXd computeJacobianTimeVariation(const VectorXd& q, const VectorXd& qdot);
-            VectorXd computeVelocity(const VectorXd& q, const VectorXd& qdot);
-            drc::Manipulator::ManipulabilityResult computeManipulability(const VectorXd& q, const VectorXd& qdot, const bool& with_grad, const bool& with_graddot);
-            
-            Affine3d getPose() const;
-            MatrixXd getJacobian();
-            MatrixXd getJacobianTimeVariation(); 
-            VectorXd getVelocity();
-            drc::Manipulator::ManipulabilityResult getManipulability(const bool& with_grad, const bool& with_graddot);
-            std::string getEEName(){return ee_name_;}
-        
-        private:
-            std::string ee_name_;
     };
 } // namespace FR3

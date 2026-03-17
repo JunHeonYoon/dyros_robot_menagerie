@@ -20,77 +20,77 @@ find_package(sensor_msgs            REQUIRED)
 include_directories(include)
 
 # ===================== Husky =====================
-add_library(husky_controller_plugins SHARED
-    src/husky/controller.cpp
-    src/husky/robot_data.cpp
-)
-ament_target_dependencies(husky_controller_plugins
-    rclcpp 
-    pluginlib 
-    mujoco_ros_sim
-)
+# add_library(husky_controller_plugins SHARED
+#     src/husky/controller.cpp
+#     src/husky/robot_data.cpp
+# )
+# ament_target_dependencies(husky_controller_plugins
+#     rclcpp 
+#     pluginlib 
+#     mujoco_ros_sim
+# )
 
-target_link_libraries(husky_controller_plugins
-    dyros_robot_controller::dyros_robot_controller
-)
+# target_link_libraries(husky_controller_plugins
+#     dyros_robot_controller::dyros_robot_controller
+# )
 
-install(TARGETS husky_controller_plugins
-        LIBRARY DESTINATION lib
-)
+# install(TARGETS husky_controller_plugins
+#         LIBRARY DESTINATION lib
+# )
 
-install(PROGRAMS    ${PROJECT_NAME}/husky/ros2_qt_gui.py
-        DESTINATION lib/${PROJECT_NAME}
-        RENAME      HuskyControllerQT
-)
+# install(PROGRAMS    ${PROJECT_NAME}/husky/ros2_qt_gui.py
+#         DESTINATION lib/${PROJECT_NAME}
+#         RENAME      HuskyControllerQT
+# )
 
 # ===================== XLS =====================
-add_library(xls_controller_plugins SHARED
-    src/xls/controller.cpp
-    src/xls/robot_data.cpp
-)
-ament_target_dependencies(xls_controller_plugins
-    rclcpp 
-    pluginlib 
-    mujoco_ros_sim
-)
+# add_library(xls_controller_plugins SHARED
+#     src/xls/controller.cpp
+#     src/xls/robot_data.cpp
+# )
+# ament_target_dependencies(xls_controller_plugins
+#     rclcpp 
+#     pluginlib 
+#     mujoco_ros_sim
+# )
 
-target_link_libraries(xls_controller_plugins
-    dyros_robot_controller::dyros_robot_controller
-)
+# target_link_libraries(xls_controller_plugins
+#     dyros_robot_controller::dyros_robot_controller
+# )
 
-install(TARGETS xls_controller_plugins
-        LIBRARY DESTINATION lib
-)
+# install(TARGETS xls_controller_plugins
+#         LIBRARY DESTINATION lib
+# )
 
-install(PROGRAMS    ${PROJECT_NAME}/xls/ros2_qt_gui.py
-        DESTINATION lib/${PROJECT_NAME}
-        RENAME      XLSControllerQT
-)
+# install(PROGRAMS    ${PROJECT_NAME}/xls/ros2_qt_gui.py
+#         DESTINATION lib/${PROJECT_NAME}
+#         RENAME      XLSControllerQT
+# )
 
 
 # ===================== PCV =====================
-add_library(pcv_controller_plugins SHARED
-    src/pcv/controller.cpp
-    src/pcv/robot_data.cpp
-)
-ament_target_dependencies(pcv_controller_plugins
-    rclcpp 
-    pluginlib 
-    mujoco_ros_sim
-)
+# add_library(pcv_controller_plugins SHARED
+#     src/pcv/controller.cpp
+#     src/pcv/robot_data.cpp
+# )
+# ament_target_dependencies(pcv_controller_plugins
+#     rclcpp 
+#     pluginlib 
+#     mujoco_ros_sim
+# )
 
-target_link_libraries(pcv_controller_plugins
-    dyros_robot_controller::dyros_robot_controller
-)
+# target_link_libraries(pcv_controller_plugins
+#     dyros_robot_controller::dyros_robot_controller
+# )
 
-install(TARGETS pcv_controller_plugins
-        LIBRARY DESTINATION lib
-)
+# install(TARGETS pcv_controller_plugins
+#         LIBRARY DESTINATION lib
+# )
 
-install(PROGRAMS    ${PROJECT_NAME}/pcv/ros2_qt_gui.py
-        DESTINATION lib/${PROJECT_NAME}
-        RENAME      PCVControllerQT
-)
+# install(PROGRAMS    ${PROJECT_NAME}/pcv/ros2_qt_gui.py
+#         DESTINATION lib/${PROJECT_NAME}
+#         RENAME      PCVControllerQT
+# )
 
 # ===================== FR3 =====================
 add_library(fr3_controller_plugins SHARED
@@ -117,28 +117,28 @@ install(PROGRAMS    ${PROJECT_NAME}/fr3/ros2_qt_gui.py
 )
 
 # ===================== UR5e =====================
-add_library(ur5e_controller_plugins SHARED
-    src/ur5e/controller.cpp
-    src/ur5e/robot_data.cpp
-)
-ament_target_dependencies(ur5e_controller_plugins
-    rclcpp 
-    pluginlib 
-    mujoco_ros_sim
-)
+# add_library(ur5e_controller_plugins SHARED
+#     src/ur5e/controller.cpp
+#     src/ur5e/robot_data.cpp
+# )
+# ament_target_dependencies(ur5e_controller_plugins
+#     rclcpp 
+#     pluginlib 
+#     mujoco_ros_sim
+# )
 
-target_link_libraries(ur5e_controller_plugins
-    dyros_robot_controller::dyros_robot_controller
-)
+# target_link_libraries(ur5e_controller_plugins
+#     dyros_robot_controller::dyros_robot_controller
+# )
 
-install(TARGETS ur5e_controller_plugins
-        LIBRARY DESTINATION lib
-)
+# install(TARGETS ur5e_controller_plugins
+#         LIBRARY DESTINATION lib
+# )
 
-install(PROGRAMS    ${PROJECT_NAME}/ur5e/ros2_qt_gui.py
-        DESTINATION lib/${PROJECT_NAME}
-        RENAME      UR5eControllerQT
-)
+# install(PROGRAMS    ${PROJECT_NAME}/ur5e/ros2_qt_gui.py
+#         DESTINATION lib/${PROJECT_NAME}
+#         RENAME      UR5eControllerQT
+# )
 
 # ===================== Dual FR3 =====================
 add_library(dual_fr3_controller_plugins SHARED
@@ -189,77 +189,78 @@ install(PROGRAMS    ${PROJECT_NAME}/fr3_husky/ros2_qt_gui.py
 )
 
 # =================== FR3 XLS ===================
-add_library(fr3_xls_controller_plugins SHARED
-    src/fr3_xls/controller.cpp
-    src/fr3_xls/robot_data.cpp
-)
-ament_target_dependencies(fr3_xls_controller_plugins
-    rclcpp 
-    pluginlib 
-    mujoco_ros_sim
-)
+# add_library(fr3_xls_controller_plugins SHARED
+#     src/fr3_xls/controller.cpp
+#     src/fr3_xls/robot_data.cpp
+# )
+# ament_target_dependencies(fr3_xls_controller_plugins
+#     rclcpp 
+#     pluginlib 
+#     mujoco_ros_sim
+# )
 
-target_link_libraries(fr3_xls_controller_plugins
-    dyros_robot_controller::dyros_robot_controller
-)
+# target_link_libraries(fr3_xls_controller_plugins
+#     dyros_robot_controller::dyros_robot_controller
+# )
 
-install(TARGETS fr3_xls_controller_plugins
-        LIBRARY DESTINATION lib
-)
+# install(TARGETS fr3_xls_controller_plugins
+#         LIBRARY DESTINATION lib
+# )
 
-install(PROGRAMS    ${PROJECT_NAME}/fr3_xls/ros2_qt_gui.py
-        DESTINATION lib/${PROJECT_NAME}
-        RENAME      FR3XLSControllerQT
-)
+# install(PROGRAMS    ${PROJECT_NAME}/fr3_xls/ros2_qt_gui.py
+#         DESTINATION lib/${PROJECT_NAME}
+#         RENAME      FR3XLSControllerQT
+# )
 
 # =================== FR3 PCV ===================
-add_library(fr3_pcv_controller_plugins SHARED
-    src/fr3_pcv/controller.cpp
-    src/fr3_pcv/robot_data.cpp
-)
-ament_target_dependencies(fr3_pcv_controller_plugins
-    rclcpp 
-    pluginlib 
-    mujoco_ros_sim
-)
+# add_library(fr3_pcv_controller_plugins SHARED
+#     src/fr3_pcv/controller.cpp
+#     src/fr3_pcv/robot_data.cpp
+# )
+# ament_target_dependencies(fr3_pcv_controller_plugins
+#     rclcpp 
+#     pluginlib 
+#     mujoco_ros_sim
+# )
 
-target_link_libraries(fr3_pcv_controller_plugins
-    dyros_robot_controller::dyros_robot_controller
-)
+# target_link_libraries(fr3_pcv_controller_plugins
+#     dyros_robot_controller::dyros_robot_controller
+# )
 
-install(TARGETS fr3_pcv_controller_plugins
-        LIBRARY DESTINATION lib
-)
+# install(TARGETS fr3_pcv_controller_plugins
+#         LIBRARY DESTINATION lib
+# )
 
-install(PROGRAMS    ${PROJECT_NAME}/fr3_pcv/ros2_qt_gui.py
-        DESTINATION lib/${PROJECT_NAME}
-        RENAME      FR3PCVControllerQT
-)
+# install(PROGRAMS    ${PROJECT_NAME}/fr3_pcv/ros2_qt_gui.py
+#         DESTINATION lib/${PROJECT_NAME}
+#         RENAME      FR3PCVControllerQT
+# )
 # ===================================================
 
 # =================== Dual FR3 Husky ===================
-add_library(dual_fr3_husky_controller_plugins SHARED
-    src/dual_fr3_husky/controller.cpp
-    src/dual_fr3_husky/robot_data.cpp
-)
-ament_target_dependencies(dual_fr3_husky_controller_plugins
-    rclcpp 
-    pluginlib 
-    mujoco_ros_sim
-)
+# add_library(dual_fr3_husky_controller_plugins SHARED
+#     src/dual_fr3_husky/controller.cpp
+#     src/dual_fr3_husky/robot_data.cpp
+# )
+# ament_target_dependencies(dual_fr3_husky_controller_plugins
+#     rclcpp 
+#     pluginlib 
+#     mujoco_ros_sim
+# )
 
-target_link_libraries(dual_fr3_husky_controller_plugins
-    dyros_robot_controller::dyros_robot_controller
-)
+# target_link_libraries(dual_fr3_husky_controller_plugins
+#     dyros_robot_controller::dyros_robot_controller
+# )
 
-install(TARGETS dual_fr3_husky_controller_plugins
-        LIBRARY DESTINATION lib
-)
+# install(TARGETS dual_fr3_husky_controller_plugins
+#         LIBRARY DESTINATION lib
+# )
 
-install(PROGRAMS    ${PROJECT_NAME}/dual_fr3_husky/ros2_qt_gui.py
-        DESTINATION lib/${PROJECT_NAME}
-        RENAME      DualFR3HuskyControllerQT
-)
+# install(PROGRAMS    ${PROJECT_NAME}/dual_fr3_husky/ros2_qt_gui.py
+#         DESTINATION lib/${PROJECT_NAME}
+#         RENAME      DualFR3HuskyControllerQT
+# )
+# ===================================================
 
 
 

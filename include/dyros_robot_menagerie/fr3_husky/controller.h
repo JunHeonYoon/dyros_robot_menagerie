@@ -81,6 +81,7 @@ MuJoCo Model Information: fr3_husky
             // ====================================================================================
             // ===================== Helper / CB / Background Thread Functions ==================== 
             // ====================================================================================
+            bool setDRCGains();
             void setMode(const std::string& mode);
             void keyCallback(const std_msgs::msg::Int32::SharedPtr);
             void subtargetEEPoseCallback(const geometry_msgs::msg::PoseStamped::SharedPtr);
@@ -141,7 +142,7 @@ MuJoCo Model Information: fr3_husky
             MobiVec qdot_mobile_init_;
 
             //// operation space state
-            std::string link_ee_name_;
+            std::string ee_name_;
             Affine3d x_goal_;
             std::map<std::string, drc::TaskSpaceData> link_ee_task_;
 
@@ -150,17 +151,20 @@ MuJoCo Model Information: fr3_husky
             MobiVec qdot_mobile_desired_;
 
             //// gains
-            ManiVec      mani_joint_kp_;
-            ManiVec      mani_joint_kv_;
-            ManiVec      qpik_mani_damping_;
-            Vector3d     qpik_base_damping_;
-            ManiVec      qpid_mani_vel_damping_;
-            ManiVec      qpid_mani_acc_damping_;
-            Vector3d     qpid_base_vel_damping_;
-            Vector3d     qpid_base_acc_damping_;
-            std::map<std::string, Vector6d> link_task_kp_;
-            std::map<std::string, Vector6d> link_task_kv_;
-            std::map<std::string, Vector6d> link_qpik_tracking_;
-            std::map<std::string, Vector6d> link_qpid_tracking_;
+            ManiVec     joint_kp_;
+            ManiVec     joint_kv_;
+            TaskVec     task_ik_kp_;
+            TaskVec     task_id_kp_;
+            TaskVec     task_id_kv_;
+            TaskVec     qpik_tracking_;
+            ManiVec     qpik_mani_vel_damping_; 
+            ManiVec     qpik_mani_acc_damping_; 
+            VirtualVec  qpik_mobi_vel_damping_; 
+            VirtualVec  qpik_mobi_acc_damping_; 
+            TaskVec     qpid_tracking_;
+            ManiVec     qpid_mani_vel_damping_;
+            ManiVec     qpid_mani_acc_damping_;
+            VirtualVec  qpid_mobi_vel_damping_; 
+            VirtualVec  qpid_mobi_acc_damping_; 
     };
 } // namespace FR3Husky

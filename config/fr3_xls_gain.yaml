@@ -19,6 +19,7 @@
         - 5.0  # joint7
 
     task_gains:
+      link_names: ["fr3_hand_tcp"]
       kp:
         - 100.0 # x
         - 100.0 # y
@@ -36,54 +37,78 @@
 
     QPIK_gains:
       tracking:
-        - 1.0 # x
-        - 1.0 # y
-        - 1.0 # z
-        - 1.0 # r
-        - 1.0 # p
-        - 1.0 # y
-      mani_damping:
-        - 10.0 # joint 1
-        - 10.0 # joint 2
-        - 10.0 # joint 3
-        - 10.0 # joint 4
-        - 10.0 # joint 5
-        - 10.0 # joint 6
-        - 10.0 # joint 7
-      base_damping:
-        - 0.2 # vx
-        - 0.2 # vy
-        - 0.2 # wz
+        link_names: ["fr3_hand_tcp"]
+        gain:
+          - 1.0 # x
+          - 1.0 # y
+          - 1.0 # z
+          - 1.0 # r
+          - 1.0 # p
+          - 1.0 # y
+      joint_damping:
+        manipulator:
+          kv:
+            - 10.0 # joint 1
+            - 10.0 # joint 2
+            - 10.0 # joint 3
+            - 10.0 # joint 4
+            - 10.0 # joint 5
+            - 10.0 # joint 6
+            - 10.0 # joint 7
+          # TODO: set QPIK manipulator joint acceleration damping weights
+          ka:
+            - 0.0 # joint 1
+            - 0.0 # joint 2
+            - 0.0 # joint 3
+            - 0.0 # joint 4
+            - 0.0 # joint 5
+            - 0.0 # joint 6
+            - 0.0 # joint 7
+        base:
+          kv:
+            - 0.2 # vx
+            - 0.2 # vy
+            - 0.2 # wz
+          # TODO: set QPIK base acceleration damping weights
+          ka:
+            - 0.0 # vx
+            - 0.0 # vy
+            - 0.0 # wz
 
     QPID_gains:
       tracking:
-        - 1.0 # x
-        - 1.0 # y
-        - 1.0 # z
-        - 1.0 # r
-        - 1.0 # p
-        - 1.0 # y
-      mani_vel_damping:
-        - 0.1 # joint 1
-        - 0.1 # joint 2
-        - 0.1 # joint 3
-        - 0.1 # joint 4
-        - 0.1 # joint 5
-        - 0.1 # joint 6
-        - 0.1 # joint 7
-      mani_acc_damping:
-        - 0.01 # joint 1
-        - 0.01 # joint 2
-        - 0.01 # joint 3
-        - 0.01 # joint 4
-        - 0.01 # joint 5
-        - 0.01 # joint 6
-        - 0.01 # joint 7
-      base_vel_damping:
-        - 10.0 # vx
-        - 10.0 # vy
-        - 10.0 # wz
-      base_acc_damping:
-        - 0.0001 # vx
-        - 0.0001 # vy
-        - 0.0001 # wz
+        link_names: ["fr3_hand_tcp"]
+        gain:
+          - 1.0 # x
+          - 1.0 # y
+          - 1.0 # z
+          - 1.0 # r
+          - 1.0 # p
+          - 1.0 # y
+      joint_damping:
+        manipulator:
+          kv:
+            - 0.1 # joint 1
+            - 0.1 # joint 2
+            - 0.1 # joint 3
+            - 0.1 # joint 4
+            - 0.1 # joint 5
+            - 0.1 # joint 6
+            - 0.1 # joint 7
+          ka:
+            - 0.01 # joint 1
+            - 0.01 # joint 2
+            - 0.01 # joint 3
+            - 0.01 # joint 4
+            - 0.01 # joint 5
+            - 0.01 # joint 6
+            - 0.01 # joint 7
+        base:
+          kv:
+            - 10.0 # vx
+            - 10.0 # vy
+            - 10.0 # wz
+          ka:
+            - 0.0001 # vx
+            - 0.0001 # vy
+            - 0.0001 # wz
